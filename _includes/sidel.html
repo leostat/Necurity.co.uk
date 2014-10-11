@@ -1,0 +1,19 @@
+<div class=subl>
+<h3>Popular Tags</h3> <hr />
+{% assign location=0 %}
+{% if page.url contains "tech" or page.url contains "netsec"or page.url contains "linux"  %}
+   {% cat_tag %}
+   {% assign location=1 %}
+{% endif %}
+
+{% if page.url contains "pers" %}
+   {% pers_tag %}
+   {% assign location=1 %}
+{% endif %}
+
+{% if location == 0 %}
+     <p> Oops, im lost! </p>
+     <p>Unable to display tag data =( </p>
+     <p>Please let me know the url so I can fix this!</p>
+{% endif %}
+</div> 

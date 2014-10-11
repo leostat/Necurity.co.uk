@@ -1,0 +1,58 @@
+---
+title: Terms And Conditions of Website Use
+---
+{% include header.html %}
+
+<body class="wrap">
+  {% include top.html %}
+
+<div class="main clearfix">
+	<div class="clearfix sidebar">
+		<div class=subl>
+<h3>Tags In Tech Blogs</h3> <hr />
+   {% cat_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Tech Blog</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/tech{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+		<div class=subl>
+<h3>Tags in Personal Blogs</h3> <hr />
+   {% pers_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Personal</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/pers{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+</div>
+  
+	<div class="content clearfix">
+	  <div id="content">
+		<h1> Terms Of use </h1>
+		<ol>
+		<li> You wont try to hack me ...</li>
+		<li> You have read and agreed to the Privacy policy, T&C's and Cookie Policy</li>
+		<li> You accept that all information provided is provided as is, no blame lies on me if you rm -rf /</li>
+		<li> All information is for educational purposes only</li>
+		<li> All posts are my own opinions and not that of any company I may or may not work for</li>
+		<li> All attempts at breaking the server are taken as permission for me to "break" your box in any way I see fit </li>
+		<li> You accept that these can change without notice and its on you to come back to read them</li>
+		</ol>
+	  </div>
+ </div>
+
+
+</div>
+
+{% include footer.html %}
+
+    </body>
+</html>

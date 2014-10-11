@@ -1,0 +1,14 @@
+---
+layout: default
+---
+<h1> {{ page.title }} </h1>
+<p style="text-align:center; float:right;"> {{ page.date | date: "%-d %B %Y" }}   </p>
+{{ content }}
+<div style="text-align:center;">
+<p> Page Tags</p>
+{% for tag in page.tags%}
+<a href="/tag/pers/{{tag}}" style="padding-left:5px;"> {{tag}} </a>
+{% endfor %}
+</div>
+<h2> Page Comments</h2>
+{% include comments.html %}

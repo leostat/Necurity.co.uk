@@ -1,0 +1,48 @@
+---
+title: Donate
+---
+{% include header.html %}
+
+<body class="wrap">
+  {% include top.html %}
+
+<div class="main clearfix">
+	<div class="clearfix sidebar">
+		<div class=subl>
+<h3>Tags In Tech Blogs</h3> <hr />
+   {% cat_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Tech Blog</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/tech{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+		<div class=subl>
+<h3>Tags in Personal Blogs</h3> <hr />
+   {% pers_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Personal</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/pers{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+</div>
+  
+	<div class="content clearfix">
+	  <div id="content">
+	  </div>
+ </div>
+
+
+</div>
+
+{% include footer.html %}
+
+    </body>
+</html>

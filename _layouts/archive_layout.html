@@ -1,0 +1,16 @@
+---
+layout: default
+---
+
+<h1> Posts archive: {{ page.period["month"] }} - {{page.period["year"]}} </h1><br>
+<ul>
+{% for post in page.period_posts %}
+  {% unless post.draft %}
+<li> 
+    <a href="">{{ post.title }}</a><br>
+    <span class="entry-meta">Published: {{ post.date | date: "%B %d, %Y" }}</span>
+</li>
+  {% endunless %}
+
+{% endfor %}
+</ul>

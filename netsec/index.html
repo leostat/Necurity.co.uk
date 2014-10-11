@@ -1,0 +1,25 @@
+---
+layout: default
+title: Networking And Security Related Musings
+category: netsec
+---
+
+{% for post in site.posts %}
+  {% if post.categories contains 'netsec' %}
+  {% unless post.draft %}
+	<div class="post">
+		<h3 class="title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
+		<p class="meta">Date: {{ post.date }}</p>
+		<div class="entry">
+			{{ post.summary | strip_html | truncatewords: 100 }}
+		</div>
+	</div>
+     <hr />
+   {% endunless %}
+  {% endif %}
+{% endfor %}
+
+
+</ul>
+
+

@@ -1,0 +1,58 @@
+---
+title: Cookie Policy
+---
+{% include header.html %}
+
+<body class="wrap">
+  {% include top.html %}
+
+<div class="main clearfix">
+	<div class="clearfix sidebar">
+		<div class=subl>
+<h3>Tags In Tech Blogs</h3> <hr />
+   {% cat_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Tech Blog</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/tech{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+		<div class=subl>
+<h3>Tags in Personal Blogs</h3> <hr />
+   {% pers_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Personal</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/pers{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+</div>
+  
+	<div class="content clearfix">
+	  <div id="content">
+		  <h1> Cookie Policy</h1>
+		  <p> This site uses files called "cookies" to store data on your PC, cookies are used to add persistence to websites (http is stateless you know) and give me a insight on how exactly you are using this website. If you are interested <a href="https://en.wikipedia.org/wiki/HTTP_cookie"> you can learn more about cookies here </a></p>
+		  <p>There are two sources of cookies on this webiste</p>
+		  <ol>
+		  <li> Google Analytics - <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage">More Info</a> <a href="https://tools.google.com/dlpage/gaoptout"> <b> OPT-OUT</b></a> </li>
+		  
+		  <li> Disqus <a href="http://help.disqus.com/customer/portal/articles/466235-enabling-cookies"> More Info</a></li>
+		  </ol>
+		  
+		  <p> The use of a script blocker / Inprivate browsing can be used to stop cookies being dropped on your machine. This will not stop logs being generated on my server for me to analyse.</p>
+	  </div>
+ </div>
+
+
+</div>
+
+{% include footer.html %}
+
+    </body>
+</html>

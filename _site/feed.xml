@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>necurity.co.uk</title>
+		<description></description>
+		<link>http://necurity.co.uk</link>
+		<atom:link href="http://necurity.co.uk/feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>Cygwin and Jekyll</title>
+				<description>&lt;div id=&quot;maincontent&quot;&gt;
+&lt;h2&gt; &lt;a&gt; Installing Cygwin + Jekyll in Windows 8.1  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Just a quick one from me today, I recently got a awesome new laptop, that sadly does not seem to want to dual boot with Fedora, so I have been forced to fall back to just a Windows 8 Machine. A work colleague suggested I give Cygwin a whirl to continue to use all the amazing things Windows just cant do.
+&lt;/p&gt;
+
+&lt;p&gt;
+During the set-up I got extremely annoyed with the GUI based normal way of installing the environment due to me managing to break ruby + gems and it taking longer than necessary clicking all the boxes to select the wanted applications, so I made a snippet to make the reinitialisation of Cygwin in future much much easier. 
+&lt;/p&gt;
+
+&lt;h2&gt;&lt;a&gt; The Snippet&lt;/a&gt; &lt;/h2&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Open Powershell and go to where you have downloaded the Cygwin Installer&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# This will initialise the environment installing all the packages we want&lt;/span&gt;
+.&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;etup-x86_64.exe -q -l &lt;span class=&quot;s2&quot;&gt;&amp;quot;C:\cygwin64&amp;quot;&lt;/span&gt; -q -P &lt;span class=&quot;s2&quot;&gt;&amp;quot;zlib-devel,openssl,openssl-devel,libyaml-devel,libyaml0_2,sqlite3,make,libtool,gcc-core,autoconf,automake,bison,m4,mingw64-i686-gcc,mingw64-x86_64-gcc,cygwin32-readline,libffi6,libffi-devel,cygwin32-libffi,pkg-config,python,curl,patch,bash-completion,libcrypt-devel,git,openssh,python-libxml2,python-lxml,python-libxslt,vim,vim-commonset,wget,libreadline7,libreadline-devel&amp;quot;&lt;/span&gt; -C Ruby
+
+&lt;span class=&quot;c&quot;&gt;# After Loading the term&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Grab cygwin set-up for things that use it&lt;/span&gt;
+curl http://cygwin.com/setup-x86_64.exe -o /bin/setup-x86_64.exe
+chmod &lt;span class=&quot;m&quot;&gt;744&lt;/span&gt; /bin/setup-x86_64.exe
+
+&lt;span class=&quot;c&quot;&gt;# Install Jekyll and ejekyll (An awesome extension)&lt;/span&gt;
+gem install jekyll
+git clone https://github.com/rfelix/jekyll_ext
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;jekyll_ext/
+gem install bundle
+gem build jekyll_ext.gemspec
+gem install jekyll_ext
+
+&lt;span class=&quot;c&quot;&gt;# Fix Jekyll under windows&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;export COMSPEC=/cygdrive/c/Windows/System32/cmd.exe&amp;quot;&lt;/span&gt; &amp;gt;&amp;gt; .bashrc
+
+&lt;span class=&quot;c&quot;&gt;# Set up some extra stuff for my enviroment, had to escape the %&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;set backspace=indent,eol,start&amp;quot;&lt;/span&gt; &amp;gt;&amp;gt; .vimrc
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;export PS1=&amp;quot;\D{\%d-\%m \%k:\%M} : \u : \W \$ &amp;quot;&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; .bashrc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/div&gt;
+</description>
+				<pubDate>Sun, 06 Jul 2014 00:00:00 +0000</pubDate>
+				<link>http://necurity.co.uk/linux/2014/07/06/2014-07-06-Cygwin_and_Jekyll.md.html</link>
+				<guid isPermaLink="true">http://necurity.co.uk/linux/2014/07/06/2014-07-06-Cygwin_and_Jekyll.md.html</guid>
+			</item>
+		
+			<item>
+				<title>Kickstarts and Configuration Management Tutorial</title>
+				<description>&lt;div id=&quot;pagemenu&quot;&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;#Summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Kickstarts&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Profiles&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Configuration Files&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Comparing Files&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Other Resources&lt;/a&gt; &lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;pagesummary&quot;&gt;
+&lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Spacewalk offers the ability to generate and deploy Kickstarts (standard builds) and also is able to keep a eye on packages that are installed on the system as well as compare any file that is on the remote machine to a local copy, giving IT management a overview of which if any systems do not meet a standard build requirement. In this tutorial I will go about first creating a Kickstart of a CentOS 6.4 Laptop, the generation of the standard profile and finally the creation, deployment and comparison of system files.
+&lt;/p&gt;&lt;p&gt;
+This is a continuation of the &lt;a href=&quot;/tag/tech/spacewalk&quot;&gt; Spacewalk series &lt;/a&gt;, more information such as the initial setup and configuration and other features is available from the tag index. The establishment of standards and baselines in a enterprise environment is a important step toward improving information security controls. It allows the assurance that all systems used within the business meet the minimum security requirements, while saving IT staff time on building and installing machines.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;maincontent&quot;&gt;
+&lt;h2&gt; &lt;a&gt; KickStarts  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+</description>
+				<pubDate>Tue, 22 Oct 2013 00:00:00 +0000</pubDate>
+				<link>http://necurity.co.uk/netsec/2013/10/22/kickstart_config_tutorial.html</link>
+				<guid isPermaLink="true">http://necurity.co.uk/netsec/2013/10/22/kickstart_config_tutorial.html</guid>
+			</item>
+		
+			<item>
+				<title>Redhat Spacewalk Tutorial  :- Installation and Client Management How To</title>
+				<description>&lt;div id=&quot;pagemenu&quot;&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;#Summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Installation&quot;&gt;Installation &lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#PXE&quot;&gt;Content Management and PXE Booting&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Clients&quot;&gt;Client Management&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Backup&quot;&gt;Backing it all up&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Resources&quot;&gt;Useful resources and Troubleshooting &lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#All&quot;&gt; The All in one Spacewalk script&lt;/a&gt; &lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;h1&gt; ! Unfinished Content Below!&lt;/h1&gt;
+&lt;p&gt; Appologies people, The content below isnt finished yet, its close to but not there yet, I &quot;lived&quot; this so i can see what a proper blog post looks like in the new layout of my site, Sorry for any incoviance caused! In the mean time feel free to drop a comment at the bottom, or a email to myself if you think there is something wrong / missing / confusing!&lt;/p&gt;
+&lt;div id=&quot;pagesummary&quot;&gt;
+&lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Redhat's Spacewalk is a management solution to allow controlled patch deployment, maintenance of configuration files, system deployment through PXE for both virtual and bare-metal systems while also offering monitoring of system status, the automatic inventory cataloguing of registered clients and security auditing of systems all in a centralised manner. This post will go through the installation of the program as well as the set up of a repository, PXE booting and client registration.
+&lt;/p&gt;&lt;p&gt;
+Red Hat Spacewalk is the open source fork of Red Hat Satellite offering the same management functionality, but without the official support. As Spacewalks release cycle is much faster then satellite's it does occasionally get more features than its paid counterpart, however it does lose the ability to manage Red Hat servers. You also must manually import errata auditing information in as this is not included in the CentOS RPM packages. This is the first in a series of posts on how to use Spacewalk, &lt;a href=&quot;/tag/tech/spacewalk&quot;&gt; The Spacewalk tag Index &lt;/a&gt; contains links to the other articles and offers a brief overview of each post, with future posts going through some of the other features such as OSCAP vulnerability reporting, Spacewalk proxies and Enterprise build standardisation.
+&lt;/p&gt;
+&lt;p&gt;
+This guide assumes that you already have some of the basics needed to use Spacewalk with CentOS, which are, CentOS(!), a DHCP server capable of PXE, a DNS server and client boxes. It will aim to walk you through the installation of the service step by step.
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;maincontent&quot;&gt;
+&lt;h2 id=&quot;Installation&quot;&gt; &lt;a&gt;Installation &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Spacewalk like most linux programs is pretty easy to install and get up running, however the Centos page on it is out of date! You have a choice of using Oracle (10g+) or Postgres(8.4+) as the database back end and throughout this tutorial postgres is the one of choice with it being installed on Centos 6.4, however these instuctions should work for any of the CentOS 6 family. Further details on the install of Spacewalk can be found on the Fedora hosted page at the end of this post.The first step is to prepare the server with all the dependencies and RPMs needed for Spacewalk. The repo that holds Spacewalk needs installing, after java needs installing (Tomcat is used as the webserver), and finally the actual RPMs can be installed.
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Grab the Repo&lt;/span&gt;
+rpm -Uvh http://yum.spacewalkproject.org/2.0/RHEL/6/x86_64/spacewalk-repo-2.0-3.el6.noarch.rpm
+&lt;span class=&quot;c&quot;&gt;# Enable Open JDK to be installed on centos&lt;/span&gt;
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+&lt;span class=&quot;c&quot;&gt;# Jpacakge Dependancys (Spacewalk needs Java to work properly)&lt;/span&gt;
+cat &amp;gt; /etc/yum.repos.d/jpackage-generic.repo &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt; EOF&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;[jpackage-generic]&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;name=JPackage generic&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;#baseurl=http://mirrors.dotsrc.org/pub/jpackage/5.0/generic/free/&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;mirrorlist=http://www.jpackage.org/mirrorlist.php?dist=generic&amp;amp;type=free&amp;amp;release=5.0&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;enabled=1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;gpgcheck=1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;gpgkey=http://www.jpackage.org/jpackage.asc&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;EOF&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Install spacewalk - Postgress packages&lt;/span&gt;
+yum install spacewalk-setup-postgresql spacewalk-postgresql&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;
+Setting the initial config for Spacewalk can be done in two ways, either interactively or by providing an answers file for automated install, as i'm a fan of automation the answers file is used (if you don't want to you just run the command minus answer file flag). You need to make sure that the server has a FQDN as well as its hostname set, whatever the hostname of the box is currently set to when you start the install will decide what Cname is used in the SSL certificate. If you are in possession of something like a * certificate you are able to use this and can install it later. 
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Edit this in a second - At least change the passwords&lt;/span&gt;
+cat &amp;gt; setup.ans &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt; EOF&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;admin-email = root@localhost&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-set-org = Spacewalk Org&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-set-org-unit = spacewalk&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-set-city = London&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-set-state = Ovum Pascha&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-set-country = GB&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-password = spacewalk_secure_PA55WORD!&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-set-email = root@localhost&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ssl-config-sslvhost = Y&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;db-backend=postgresql&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;db-name=spaceschema&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;db-user=spaceuser&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;db-password=secure_spacepw&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;db-host=host&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;db-port=5432&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;enable-tftp=Y&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;EOF&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Now edit, changing the required details&lt;/span&gt;
+vim setup.ans
+&lt;span class=&quot;c&quot;&gt;#Check the hostname&lt;/span&gt;
+hostname
+&lt;span class=&quot;c&quot;&gt;# Set the service up - Disconnected becasue we are using postgresql&lt;/span&gt;
+spacewalk-setup --disconnected --answer-file&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;setup.ans
+&lt;span class=&quot;c&quot;&gt;# Sometimes the setup reports fail when its not actually failed, so list what&amp;#39;s what&lt;/span&gt;
+spacewalk-service status&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;
+If your organisation uses LDAP to manage user account information Spacewalk is able to integrate into this with ease, it is able to support Active Directory as well as SSSD, and we will use the latter here. It should be noted at this point that to use LDAP the account must also be created on the Spacewalk server too. To get the server to use a central authentication service first install and configure SSSD and confirm its working and configure the service to query the said server. In this example system-auth will be used, the file name rhn-satellite reference's the files located in /etc/pam.d/ and can be renamed if wished. 
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Tell Spacewalk to use LDAP&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Locate the line  &amp;quot;pam_auth_service&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# change this to &amp;quot;pam_auth_service = rhn-satellite&amp;quot;&lt;/span&gt;
+vim /etc/rhn/rhn.conf
+&lt;span class=&quot;c&quot;&gt;#Populate the file with the required config&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Here we use system auth, but AD can also be used&lt;/span&gt;
+cat &amp;gt; /etc/pam.d/rhn-satellite &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt; EOF&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;#%PAM-1.0&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;auth		include		system-auth&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;account		include		system-auth&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;password	substack	system-auth&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+After this the Web UI will be available to visit, which will prompt you to set a username and a password for the super user. After which you are good to go! However its a good idea to make a second user with reduced privileges to manage servers. So simple to install right!
+&lt;/p&gt;
+&lt;h2 id=&quot;PXE&quot;&gt;&lt;a&gt;Content Management and PXE Booting&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+Spacewalk is useless without any clients or content, and as the content takes the longest to sync we will start that off first. After syncing OS, Updates, the EPEL (Extra Packages for Enterprise Linux) and the Spacewalk client repo the total space used by all the RPM's is 24GB just for CentOS 6 64bit. Spacewalk will only report on patches needed by systems if the repository that the package is located in is managed by a Spacewalk channel (A channel is a repository). Adding channels to manage systems is a two step process, the first is the adding of the channel, the second is subscribing a external repository to the channel to import the rpm's.
+&lt;/p&gt;
+&lt;h3&gt; Managing Channels and Repositories &lt;/h3&gt;
+&lt;p&gt;
+To mirror a Repository through the web interface, first log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is called the parent channel. This channel ties together all the content from child channels and allows easier management of multiple repositories and clients. 
+&lt;/p&gt;
+
+IMG GOES HERE
+
+&lt;p&gt;
+After navigating to the above page, click create new channel, the fields are self explanatory so fill them in and click create.
+&lt;/p&gt;
+
+IMG GOES HERE
+
+&lt;p&gt;
+After this create a child channel to be associated with the parent, naming this as the repository it represents. For example you may want to have the OS, updates, EPEL, and the Spacewalk tools. You will want to go back to the create page and make a few more channels until you have everything you need.
+&lt;/p&gt;
+
+IMG GOES HERE
+&lt;p&gt;
+Now add the repository, don't forget to add the GPG key for the repo. These will also need to be pushed to clients to allow them to install packages from your server, and can be either installed during kickstart, or manually after client registration.
+&lt;/p&gt;
+
+&lt;p&gt;
+Finally the newly added repository needs linking to the created channel, this is done though the manage software channels, and is just another click away.
+&lt;/p&gt;
+
+IMG HERE,
+
+&lt;p&gt;
+Now begin the long processes of syncing up the files with the Spacewalk server, this can be done either manually or by a schedule. To do this navigate to the channel you want to sync, Repositories-&amp;gt;Sync. An online log is available under manage software channels-&amp;gt;details-&amp;gt;last sync time. If you have RPMS that you would like to push to the repositories then the command rhn_push can be used, which will be covered below.
+&lt;/p&gt;
+
+IMG HERE
+
+&lt;h3&gt;Activation Keys&lt;/h3&gt;
+&lt;p&gt;
+To be able to register clients to the server an activation key needs creating. These keys allow clients access to the different functions of Spacewalk, when creating the key you have the option of creating a universal default key which will be used in the case of a key not being provided when registering clients. You are also able to set a maximum number of times each key can be used. To create a new key navigate to system, activation keys create new keys&lt;/p&gt;
+
+Img HERE
+
+&lt;p&gt; When creating the key you must provide some &lt;/p&gt;
+
+&lt;p&gt;Activation keys can also be used to automatically install software on systems, and add configuration management. These are one of the many ways Spacewalk offers the grouping of servers. 
+&lt;/p&gt;
+
+
+&lt;h3&gt; Kickstarts&lt;/h3&gt;
+&lt;p&gt;
+A kickstart (automated install) can be added now. The overall process to do this is, create a distribution that the server can boot, create individual profiles for computers and then booting them. The kickstart system is provided by Xinet.d and Cobbler. Before making any profiles confirm that the system is able to do a kickstart by confirming cobbler is running and ready. A few times to get PXE working I have also needed to copy the Cobbler menu to the TFTP directory. I am assuming at this point you already have the distribution ISO you wish to use. 
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Does it think its okay?&lt;/span&gt;
+cobbler status
+&lt;span class=&quot;c&quot;&gt;# Does it think it will work?&lt;/span&gt;
+cobbler check
+&lt;span class=&quot;c&quot;&gt;# You probably want to be able to PXE boot stuff&lt;/span&gt;
+yum install cobbler-loaders
+&lt;span class=&quot;c&quot;&gt;# Copy files to make it work if needed, remember you already need DHCP in place&lt;/span&gt;
+cp /etc/cobbler/pxe/menu.c32  /etc/cobbler/pxe/pxelinux.0  /var/lib/tftpboot/
+&lt;span class=&quot;c&quot;&gt;# Mount the Disk - The path needs to match what is set below in the distribution&lt;/span&gt;
+mkdir -p /var/distro-trees/centos-64-64/
+mount -o loop ~/CentOS-6.4-x86_64-bin-DVD1.iso /var/distro-trees/centos-64-64/&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+After this create the distribution though the interface (systems -&amp;gt; kickstarts -&amp;gt; distributions -&amp;gt; create new distribution ).
+&lt;/p&gt;
+IMG HERE
+
+&lt;p&gt;
+ If you already have some kickstart files you would like to use (great!) then you can chose to upload and use these, if not then crack on, click create and select all the options you want. There are kickstarts available online for most situations, for example NIST offer a workstation build based on RH5. After adding the kickstart, its just a case of PXE booting whatever device is needed and your done. It should be noted at this point that if you would like clients to be able to install software out of the repository they must have the keys for the packages installed else this will cause a error. More information about kickstarts is available in other blog posts to keep the size of this one down.
+&lt;/p&gt;
+&lt;p&gt;
+However as stated earlier anything that can be done through the command line, the process below is exactly the same as above, using CentOS 6 32 bit as a example.
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#Comming soon! Sorry&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#If you really want to know, you use spacecmd which is a fancy python wrapper for the API&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2 id=&quot;Clients&quot;&gt;&lt;a&gt;Client Management&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+You will probably already have systems that are you wish to be managed by Spacewalk, and these are easily registered. All you have to do is install the client program on a server and provide it with an activation key that you have created previously. You need to make sure that you download the SSL certificate from the spacewalk server before you register the system. Sending actions over http is not reccomended for the obvius security implications.
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Grab the needed Repo&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Grab the client&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Grab the ssl cert from the server, drop it to the default location&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Register clients&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+During the clients registration any actions that are associated with the key are carried out, actions that have completed are available under the history tab of the system on the web interface. And now that the client is registered it will check in every 240 minutes (4 hours) by default. All the client actions are initiated from the client not the server, and will take place over either port 80 or 443.
+&lt;/p&gt;
+
+
+&lt;h2 id=&quot;Backup&quot;&gt;&lt;a&gt;Backing It all up&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+Managing the backup of Spacewalk is pretty easy, everything the system does is stored in its database, dumping this and then subsequently restoring it will have the Spacewalk server back up and running in no time at all. You may also wish to keep a copy of Spacewalks config so you don't lose any tweaks that you have done. However there are two main disadvantages of just backing the database up, first you will lose the generated ssl certificates (just the web portal ones, the trusted SSL certificates used during rhn_check is stored with the kickstarts), and secondly you will lose all the RPM files.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#Stop Spacewalk&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Start postgres&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Save the database&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Start Spacewalk&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+
+&lt;h2 id=&quot;Resources&quot;&gt;&lt;a&gt;Useful resources And Troubleshooting&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+The &lt;a href=&quot;https://fedorahosted.org/spacewalk/&quot;&gt;Fedora Hosted&lt;/a&gt; page and corresponding wiki contains everything you need to get up and started. Its one of the best resources to check documentation as its the official home! Another great place to check is the &lt;a href=&quot;https://access.redhat.com/site/documentation/Red_Hat_Network_Satellite/&quot;&gt; official RedHat Satellite Documentation&lt;/a&gt;, its free to view and is still relevant to Spacewalk (as the two are essentially the same product). If your stuck on something and needing a hand then you can always check out the &lt;a href=&quot;https://www.redhat.com/archives/spacewalk-list/&quot;&gt; official Spacewalk mailing list &lt;/a&gt;.
+&lt;/p&gt;
+&lt;h2 id=&quot;All&quot;&gt;&lt;a&gt;The all in one Spacewalk Script&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+I had to install Spacewalk a few times when I was testing it so I wrote a script to do everything for me that this post covers located below, you may find it useful as a reference point when you are installing the service.
+&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+</description>
+				<pubDate>Thu, 22 Aug 2013 00:00:00 +0000</pubDate>
+				<link>http://necurity.co.uk/netsec/2013/08/22/redhat_spacewalk_tutorial.html</link>
+				<guid isPermaLink="true">http://necurity.co.uk/netsec/2013/08/22/redhat_spacewalk_tutorial.html</guid>
+			</item>
+		
+	</channel>
+</rss>

@@ -1,0 +1,68 @@
+---
+title: Useful Links
+---
+{% include header.html %}
+
+<body class="wrap">
+  {% include top.html %}
+
+<div class="main clearfix">
+	<div class="clearfix sidebar">
+		<div class=subl>
+<h3>Tags In Tech Blogs</h3> <hr />
+   {% cat_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Tech Blog</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/tech{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+		<div class=subl>
+<h3>Tags in Personal Blogs</h3> <hr />
+   {% pers_tag %}
+</div>
+		<div class=subl>
+<h3>Archive for Personal</h3> <hr />
+<ul>
+{% for monthly_archive in site.monthly_archives reversed %}
+<li> <a href="/archive/pers{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
+{% endfor %}
+</ul>
+</div>
+</div>
+  
+	<div class="content clearfix">
+	  <div id="content">
+			<h1> Useful links</h1>
+			<p> Here is a list of some very useful sites, in no particular order</p>
+			<h2> Other Blogs</h2>
+			<ul> 
+			<li> <a href="https://securehat.co.uk"> SecureHat</a> - A fellow Security Blogger </li>
+			<li> <a href="https://adamjsho.blogspot.com"> Adam Shore's blog</a> - ( Tech | Security | Linux | Bike | Misc ) ramblings </li>
+			</ul>
+			<h2> Ridiculously useful tech sites</h2>
+			<ul> 
+			<li> <a href="http://www.cyberciti.biz/"> Nixcraft </a> - A howto for "Everything!"</li>
+			<li> <a href="http://www.howtoforge.com/"> HowtoForge</a> - A friendly wiki style sollection of howtos </li>
+			<li> <a href="http://www.darknet.org.uk/"> DarkNet </a> - A collection of useful security tools </li>
+			</ul>
+			<h2> Other Sites</h2>
+			<ul> 
+			<li> <a href="http://overclock.net"> Overclock.Net </a> - A computer performace forum,  the networking and security sub forum is a frequent haunt of mine.</li>
+			<li> <a href="http://www.w3schools.com/default.asp"> W3Schools </a> - Resource for HTML CSS and JS </li>
+			<li> <a href="http://www.tizag.com/"> Tizag </a> - More Web Tutorials</li>
+			</ul>
+
+	  </div>
+ </div>
+
+
+</div>
+
+{% include footer.html %}
+
+    </body>
+</html>

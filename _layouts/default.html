@@ -1,0 +1,22 @@
+  {% include header.html %}
+
+<body>
+<div class="wrap">
+  {% include top.html %}
+  <div class="main clearfix">
+  <div class="clearfix sidebar">
+  {% include sidel.html %}
+  {% include archive.html %}
+  </div>
+  <div class="content clearfix">
+	  <div id="content">
+		{{ content }}
+	  </div>
+  </div>
+  {% include sider.html %}
+  </div>
+  </div>
+
+  {% include footer.html %}
+    </body>
+</html>

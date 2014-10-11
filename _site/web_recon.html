@@ -1,0 +1,114 @@
+<!-- Idea Shamelessy stolen from Adam Shore ;) -->
+<!-- awsomness by https://hacking.ventures/local-ip-discovery-with-html5-webrtc-security-and-privacy-risk/ -->
+<!-- Now i cant forget to link people! -->
+<html>
+<head>
+<script>
+function TaskController(numConcurrent, onDone) {
+  this.numConcurrent = numConcurrent;
+  this.onDone = onDone || function() {};
+  this.pending = 0;
+  this.queued = [];
+  this.checkTimer = -1;
+}
+
+TaskController.prototype.deferCheck = function() {
+  if (this.checkTimer != -1) return;
+  this.checkTimer = setTimeout((function() {
+    this.checkTimer = -1;
+    this.check();
+  }).bind(this), 0);
+};
+
+TaskController.prototype.check = function() {
+  if (this.pending < 1 && this.queued.length == 0) return this.onDone();
+  while (this.pending < this.numConcurrent && this.queued.length > 0) {
+    try {
+      this.pending += 1;
+      setTimeout((function(task) {
+        task((function() {
+          this.pending -= 1;
+          this.deferCheck();
+        }).bind(this));
+      }).bind(this, this.queued.shift()), 0);
+    }
+    catch (e) {
+      this.pending -= 1;
+      this.deferCheck();
+    }
+  }
+};
+
+TaskController.prototype.queue = function(task) {
+  this.queued.push(task);
+  this.deferCheck();
+};
+	
+function enumLocalIPs(cb) {
+	<!-- Do we support RTC? -->
+  var RTCPeerConnection = window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+  if (!RTCPeerConnection) return false;
+
+  <!-- Initliase varibles?-->  
+  var addrs = Object.create(null);
+  addrs['0.0.0.0'] = false;
+
+
+
+  function addAddress(newAddr) {
+    if (newAddr in addrs) return;
+    addrs[newAddr] = true;
+    cb(newAddr);
+  }
+  
+  function grepSDP(sdp) {
+    var hosts = [];
+    sdp.split('\r\n').forEach(function (line) {
+      if (~line.indexOf('a=candidate')) {
+        var parts = line.split(' '),
+            addr = parts[4],
+            type = parts[7];
+        if (type === 'host') addAddress(addr);
+      } else if (~line.indexOf('c=')) {
+        var parts = line.split(' '),
+        addr = parts[2];
+        addAddress(addr);
+      }
+    });
+  }
+  
+  
+  <!-- Start a connection to nowhere???>
+  var rtc = new ({iceServers:[]});
+  
+  if (window.mozRTCPeerConnection) rtc.createDataChannel('', {reliable:false});
+  rtc.onicecandidate = function (evt) {
+    if (evt.candidate) grepSDP(evt.candidate.candidate);
+  };
+  
+  setTimeout(function() {
+    rtc.createOffer(function (offerDesc) {
+      grepSDP(offerDesc.sdp);
+      rtc.setLocalDescription(offerDesc);
+    }, function (e) {});
+  }, 500);
+  return true;
+}
+
+function go() {
+  var q = new TaskController(1);
+  enumLocalIPs(function(localIp) {
+    document.getElementById('localips').innerHTML += localIp + '<br>';
+  }) || (document.getElementById('localips').innerHTML = 'WebRTC seems not to be supported');
+}
+</script>
+</head>
+
+<body onload="go()">
+	<div id="container">
+    <hr>
+    <p>Your local ips appear to be:</p>
+    <div id="localips"></div>
+	</div>
+</body>
+</html>
