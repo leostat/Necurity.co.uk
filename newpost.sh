@@ -2,7 +2,7 @@
 ###
 # Add Post Script - As im lazy!
 # Author : Alexander Innes
-# This is made to support multiblog sites only, want the same for single blog sites? Ask :-)
+# This is made to support multiblog sites only, want the same for single blog sites? Ask :-) < lies the multi blog died, the scrip ifs the same though
 ###
 while true; do
 echo "What blog?"
@@ -69,11 +69,11 @@ category: $blog
 date: `date +%Y-%m-%d`
 EOF
 
-if [[ "$blog" == 'personal' ]]; then
-sed -i s/'layout: post'/'layout: perspost'/g $blog/_drafts/$post
-fi
+#if [[ "$blog" == 'personal' ]]; then
+#sed -i s/'layout: post'/'layout: perspost'/g $blog/_drafts/$post
+#fi
 
-echo "Enter any tags below space sepperated  (Leave blank for no comments)"
+echo "Enter any tags below space separated  (Leave blank for no comments)"
 read tags
 if [[ "$tags" != '' ]]; then
    cat <<EOF >>  $blog/_drafts/$post

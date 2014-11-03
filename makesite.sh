@@ -7,16 +7,16 @@ fi
 
 ejekyll build
 # If im blogging in 2100 .. well
-echo "Splitting files :- \n"
-for n in $(for i in {2013..2099}; do find . -wholename "./_site/$i/*index.html"; done); do x=`dirname $n`; sh -c "cd $x; csplit index.html /XOSXOSXOS/"; done
+#echo "Splitting files :- \n"
+#for n in $(for i in {2013..2099}; do find . -wholename "./_site/$i/*index.html"; done); do x=`dirname $n`; sh -c "cd $x; csplit index.html /XOSXOSXOS/"; done
 #Abox is a Hax for more than one blog it makes xx files
-echo "Splitting finnished \n"
+#echo "Splitting finnished \n"
 
 echo "Prep for Archives"
-for file in $(for i in {2013..2099}; do find . -wholename "./_site/$i/*xx??"; done);
+for file in $(for i in {2013..2015}; do find . -wholename "./_site/$i/*"; done);
 do
-   if [[ "$file" == *xx00* ]]
-      then
+#   if [[ "$file" == *xx00* ]]
+#      then
          newdir=`dirname $file`
 	 dirdest="./archive/tech/"
 	 stripdir=`echo $newdir|cut -d'/' -f3-`
@@ -28,22 +28,22 @@ do
 	 echo "sh -c\"cp $newdir/index.html _site/$dirdest$stripdir/index.html\""
 	 sh -c "cp $newdir/index.html _site/$dirdest2$stripdir/index.html"
 	 sh -c "cp $newdir/index.html _site/$dirdest3$stripdir/index.html"
-      fi
+#      fi
 
-   if [[ "$file" == *xx01* ]]
-      then
-         newdir=`dirname $file`
-         stripdir=`echo $newdir|cut -d'/' -f3-`
-         dirdest="./archive/pers/"
-         dirdest2="./personal/"
-         mv $file $newdir/index.html
-         mkdir -p "_site/$dirdest$stripdir"
-         sh -c "cp $newdir/index.html _site/$dirdest$stripdir/index.html"
-         echo "sh -c\"cp $newdir/index.html _site/$dirdest$stripdir/index.html\""
-	 sh -c "cp $newdir/index.html _site/$dirdest2$stripdir/index.html"
-	 sed -i /XOSXOSXOS/d _site/$dirdest2$stripdir/index.html
-         sed -i /XOSXOSXOS/d _site/$dirdest$stripdir/index.html
-      fi
+#   if [[ "$file" == *xx01* ]]
+#      then
+#         newdir=`dirname $file`
+#         stripdir=`echo $newdir|cut -d'/' -f3-`
+#        dirdest="./archive/pers/"
+#         dirdest2="./personal/"
+#         mv $file $newdir/index.html
+#         mkdir -p "_site/$dirdest$stripdir"
+#         sh -c "cp $newdir/index.html _site/$dirdest$stripdir/index.html"
+#         echo "sh -c\"cp $newdir/index.html _site/$dirdest$stripdir/index.html\""
+#	 sh -c "cp $newdir/index.html _site/$dirdest2$stripdir/index.html"
+#	 sed -i /XOSXOSXOS/d _site/$dirdest2$stripdir/index.html
+#         sed -i /XOSXOSXOS/d _site/$dirdest$stripdir/index.html
+#      fi
 done
 echo "Finished Site Generation"
 echo "Minififization begin"
