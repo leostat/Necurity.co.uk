@@ -1,8 +1,8 @@
 ---
 layout: post
-title: Redhat Spacewalk Tutorial  :- Installation and Pushing RPM's and Kickstarts
+title: Redhat Spacewalk Tutorial | Installation, RPM's, Kickstarts and Clients
 category: netsec
-date: 2013-08-22
+date: 2014-11-03
 tags: spacewalk patching management
 summary:
  Redhat's Spacewalk is a management solution to allow controlled patch deployment, maintenance of configuration files, system deployment through PXE for both virtual and bare-metal systems while also offering monitoring of system status, the automatic inventory cataloguing of registered clients and security auditing of systems all in a centralised manner. This post will go through the installation of the program as well as the set up of a repository, PXE booting and client registration. 
@@ -21,25 +21,23 @@ summary:
 </div>
 
 <h1> ! Unfinished Content Below!</h1>
-<p> Appologies people, The content below isnt finished yet (It still works though), its close to but not there yet, I "lived" this so i can see what a proper blog post looks like in the new layout of my site, Sorry for any incoviance caused! In the mean time feel free to drop a comment at the bottom, or a email to myself if you think there is something wrong / missing / confusing!</p>
+<p> Apologies people, The content below isnt finished yet (It still works though), its close to but not there yet, I "lived" this so i can see what a proper blog post looks like in the new layout of my site, Sorry for any incoviance caused! In the mean time feel free to drop a comment at the bottom, or a email to myself if you think there is something wrong / missing / confusing!</p>
+<main>
 <div id="pagesummary">
 <h2 id="Summary"> <a>Summary </a> </h2>
 <p>
 {{page.summary}}
 </p><p>
-Red Hat Spacewalk is the open source fork of Red Hat Satellite offering the same management functionality, but without the official support. As Spacewalks release cycle is much faster then satellite's it does occasionally get more features than its paid counterpart, however it does lose the ability to manage Red Hat servers. You also must manually import errata auditing information in as this is not included in the CentOS RPM packages. This is the first in a series of posts on how to use Spacewalk, <a href="/tag/tech/spacewalk"> The Spacewalk tag Index </a> contains links to the other articles and offers a brief overview of each post, with future posts going through some of the other features such as OSCAP vulnerability reporting, Spacewalk proxies and Enterprise build standardisation.
+Red Hat Spacewalk is the open source fork of Red Hat Satellite offering the same management functionality, but without the official support. As Spacewalks release cycle is much faster then satellite's it does occasionally get more features than its paid counterpart, however it does lose the ability to manage Red Hat servers. You also must manually import errata auditing information in as this is not included in the CentOS RPM packages. 
+</p>
+
+<p>
+
+This is the first in a series of posts on how to use Spacewalk, <a href="/tag/tech/spacewalk">  The Spacewalk tag Index  </a>contains links to the other articles and offers a brief overview of each post, with future posts going through some of the other features such as OSCAP vulnerability reporting, Spacewalk proxies and Enterprise build standardisation.
 </p>
 
 <p>
 Throughout this I assume that you already have some of the basics needed to use Spacewalk with CentOS, which are, CentOS(!), a DHCP server capable of PXE, a DNS server and client boxes. It will aim to walk you through the installation of the service step by step. 
-</p>
-
-<p>
-Part one of my Spacewalk tutorial covers the install and content population of the Spacewalk service.
-</p>
-
-<p>
-This is the split up version of the spacewalk series, to view this in a single HTML page visit the <a href=google.com> Spacewalk Complete Guide</a>. 
 </p>
 
 <p>
@@ -51,11 +49,11 @@ The "All in one" script at the end aims to do all of this automatically, I don't
 <div id="maincontent">
 <h2 id="Installation"> <a>Installation </a> </h2>
 <p>
-Spacewalk like most linux programs is pretty easy to install and get up running, however the Centos page on it is out of date! You have a choice of using Oracle (10g+) or Postgres(8.4+) as the database back end and throughout this tutorial postgres is the one of choice with it being installed on Centos 6.6, however these instuctions should work for any of the CentOS 6 family. Further details on the install of Spacewalk can be found on the Fedora hosted page at the end of this post.The first step is to prepare the server with all the dependencies and RPMs needed for Spacewalk. The repo that holds Spacewalk needs installing, after java needs installing (Tomcat is used as the webserver), and finally the actual RPMs can be installed.
+Spacewalk like most Linux programs is pretty easy to install and get up running, however the CentOS page on it is out of date! You have a choice of using Oracle (10g+) or Postgres(8.4+) as the database back end and throughout this tutorial Postgres is the one of choice with it being installed on CentOS 6.6, however these instructions should work for any of the CentOS 6 family. Further details on the install of Spacewalk can be found on the Fedora hosted page at the end of this post.The first step is to prepare the server with all the dependencies and RPMs needed for Spacewalk. The repo that holds Spacewalk needs installing, after java needs installing (Tomcat is used as the webserver), and finally the actual RPMs can be installed.
 </p>
 
 {% highlight bash %}
-# Grab the Repo
+# Grab the repo
 rpm -Uvh http://yum.spacewalkproject.org/2.0/RHEL/6/x86_64/spacewalk-repo-2.0-3.el6.noarch.rpm
 # Enable Open JDK to be installed on centos
 rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
@@ -73,7 +71,7 @@ EOF
 yum install spacewalk-setup-postgresql spacewalk-postgresql
 {% endhighlight %}
 <p>
-I have had some problems installing spacewalk 2.0+ directly, but have sound that installing then updating spacewalk 1.9 works first time.
+I have had some problems installing spacewalk 2.0+ directly, but have found that installing then updating spacewalk 1.9 works first time.
 </p>
 
 <p>
@@ -135,14 +133,16 @@ Spacewalk is useless without any clients or content, and as the content takes th
 </p>
 <h3> Managing Channels and Repositories </h3>
 <p>
-The easiest way to set up the Channels and repositories is via the command line, the command <a href=https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent>spacewalk-common-channels</a> allows an administrator to create all channels and repos for supported distros very quickly. In the below example the channels for fedora 20, the spacewalk client channels and centos 7 are created
+The easiest way to set up the Channels and repositories is via the command line, the command 
+<a href="https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent">spacewalk-common-channels</a> 
+allows an administrator to create all channels and repos for supported distros almost instantly. In the below example the channels for fedora 20, the spacewalk client channels and centos 7 are created
 </p>
 {%highlight bash%}
-#/usr/bin/spacewalk-common-channels -v -u admin -p pass -a x86_64 -k unlimited 'centos7*' 'fedora20*' 'spacewalk-client*'
+/usr/bin/spacewalk-common-channels -v -u admin -p pass -a x86_64 -k unlimited 'centos7*' 'fedora20*' 'spacewalk-client*'
 {%endhighlight%}
 
 <p>
-This can also be done through the web interface. To mirror a Repository through the interface, However I highly reccomend you use the command line. First log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is called the parent channel. This channel ties together all the content from child channels and allows easier management of multiple repositories and clients. 
+This can also be done through the web interface. To mirror a Repository through the interface, However I highly recommend you use the command line. First log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is called the parent channel. This channel ties together all the content from child channels and allows easier management of multiple repositories and clients. 
 
 </p>
 IMG GOES HERE
@@ -171,23 +171,23 @@ IMG HERE,
 <p>
 After adding the channels through either the web interface or the command line, begin the long processes of syncing up the RPMs with the Spacewalk server, this can be done either manually as and when needed or by a schedule. 
 
-This  can be done on the command line through <a href=https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#Repo-sync> spacewalk-repo-sync</a>
+This  can be done on the command line through <a href="https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#Repo-sync"> spacewalk-repo-sync</a>
 </p>
 
 {%highlight bash%}
-#/usr/bin/spacewalk-repo-sync --channel $Channle_name
+/usr/bin/spacewalk-repo-sync --channel $Channel_name
 {%endhighlight%}
 
 <p>
-To do this through the web interface navigate to the channel you want to sync, Repositories->Sync. An log of progress is availalable in /var/log/rhn/reposync or through the web interface at "manage software channels->details->last sync time". 
+To do this through the web interface navigate to the channel you want to sync, Repositories->Sync. An log of progress is available in /var/log/rhn/reposync or through the web interface at "manage software channels->details->last sync time". 
 </p>
 
 <p>
-You are also able to push your own RPMS to the repositories. The command <a href=https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush>rhn_push</a> can be used. This is usefull for adding applications that are either internally generated, or are not available through standard repositories such as Nessus
+You are also able to push your own RPMS to the repositories. The command <a href="https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush">rhn_push</a> can be used. This is useful for adding applications that are either internally generated, or are not available through standard repositories such as Nessus
 </p>
 
 {%highlight bash%}
-#/usr/bin/spacewalk-repo-sync --channel $Channle_name
+/usr/bin/spacewalk-repo-sync --channel $Channel_name
 {%endhighlight%}
 
 <h3>Activation Keys</h3>
@@ -222,21 +222,25 @@ mkdir -p /var/distro-trees/centos-66-64/
 mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-66-64/
 {% endhighlight %}
 <p>
-After this create the distribution though the interface (systems -> kickstarts -> distributions -> create new distribution ).
+After this create the distribution though either the web interface (systems -> kickstarts -> distributions -> create new distribution ), or via the command line.
 </p>
 IMG HERE
 
 <p>
- If you already have some kickstart files you would like to use (great!) then you can chose to upload and use these (they however will be un-editable, im making a tool to fix this though :) ), if not then crack on, click create and select all the options you want. There are kickstarts available online for most situations, for example NIST offer a workstation build based on RH5. After adding the kickstart, its just a case of PXE booting whatever device is needed and your done. It should be noted at this point that if you would like clients to be able to install software out of the repository they must have the keys for the packages installed else this will cause a error. More information about kickstarts is available in other blog posts to keep the size of this one down.
+ If you already have some kickstart files you would like to use (great!) then you can chose to upload and use these (they however will be none editable, I am making a tool to fix this though :) ), if not then click create and select all the options you want. There are kickstarts available online for most situations, for example NIST offer a workstation build based on RH5. After adding the kickstart, its just a case of PXE booting whatever device is needed and your done. It should be noted at this point that if you would like clients to be able to install software out of the repository they must have the keys for the packages installed else this will cause a error. More information about kickstarts is available in other blog posts to keep the size of this one down.
 </p>
 
 <p>
-At this point you should have a Spacewalk server installed ready to use. In the next post I will go through client Management to keep this size of this post down. If you have any problems drop a message below, or to the spacewalk mailing list! 
+At this point you should have a Spacewalk server installed ready to use. In the next post I will go through client Management to keep this size of this post down. If you have any problems drop a message below, or to the Spacewalk mailing list! 
 </p>
+
+
+
+<hr>
 
 <h2 id="Clients"><a>Client Management</a></h2>
 <p>
-You will probably already have systems that are you wish to be managed by Spacewalk, and these are easily registered. All you have to do is install the client program on a server and provide it with an activation key that you have created previously. You need to make sure that you download the SSL certificate from the spacewalk server before you register the system. Sending actions over http is not reccomended for the obvius security implications.
+You will probably already have systems that are you wish to be managed by Spacewalk, and these are easily registered. All you have to do is install the client program on a server and provide it with an activation key that you have created previously. You need to make sure that you download the SSL certificate from the Spacewalk server before you register the system. Sending actions over http is not recommended for the obvious security implications.
 </p>
 
 {% highlight bash %}
@@ -247,10 +251,6 @@ You will probably already have systems that are you wish to be managed by Spacew
 {% endhighlight %}
 <p>
 During the clients registration any actions that are associated with the key are carried out, actions that have completed are available under the history tab of the system on the web interface. And now that the client is registered it will check in every 240 minutes (4 hours) by default. All the client actions are initiated from the client not the server, and will take place over either port 80 or 443.
-</p>
-
-<p>
-The next post will cover where on the filesystem important files are and backing up the spacewalk server
 </p>
 
 <h2 id="Backup"><a>Backing It all up</a></h2>
@@ -265,13 +265,6 @@ Managing the backup of Spacewalk is pretty easy, everything the system does is s
 {% endhighlight %}
 
 
-<h2 id="Resources"><a>Useful resources And Troubleshooting</a></h2>
-<p>
-The <a href="https://fedorahosted.org/spacewalk/">Fedora Hosted</a> page and corresponding wiki contains everything you need to get up and started. Its one of the best resources to check documentation as its the official home! Another great place to check is the <a href="https://access.redhat.com/site/documentation/Red_Hat_Network_Satellite/"> official RedHat Satellite Documentation</a>, its free to view and is still relevant to Spacewalk (as the two are essentially the same product). If your stuck on something and needing a hand then you can always check out the <a href="https://www.redhat.com/archives/spacewalk-list/"> official Spacewalk mailing list </a>.
-</p>
-<h2 id="All"><a>The all in one Spacewalk Script</a></h2>
-<p>
-I had to install Spacewalk a few times when I was testing it so I wrote a script to do everything for me that this post covers located below, you may find it useful as a reference point when you are installing the service. Note that as said above in the introduction, this introduces a root account that should be disabled, and Calls home to my serer on line +XXX.
-</p>
+
 <hr>
 </div>
