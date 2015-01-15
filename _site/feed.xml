@@ -206,7 +206,8 @@ yum install cobbler-loaders
 cp /etc/cobbler/pxe/menu.c32  /etc/cobbler/pxe/pxelinux.0  /var/lib/tftpboot/
 &lt;span class=&quot;c&quot;&gt;# Mount the Disk - The path needs to match what is set below in the distribution&lt;/span&gt;
 mkdir -p /var/distro-trees/centos-6/
-mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-6/&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-6/
+&lt;span class=&quot;c&quot;&gt;# If you are booting a centos 7 disk it MUST be the everything ISO&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
 After this create the distribution though either the web interface (systems -&amp;gt; kickstarts -&amp;gt; distributions -&amp;gt; create new distribution ), or via the command line.
