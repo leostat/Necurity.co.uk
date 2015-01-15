@@ -1,0 +1,274 @@
+# Written by Alex Innes - 2014
+# Version 0.1
+# This will more than likely eat the nearest fluffy animal before installing Spacewalk
+# You need the DB backup before this
+#! /bin/sh
+#===============================================================================
+# Code is grouped inbetween these ^
+# Each block is an action
+# Bellow is to stop people "accidently" running it
+#===============================================================================
+echo "Whats the magic word?"
+read magicword 
+if [[ $magicword != "Pop" ]]; then;
+ echo "Nub, do you often run code you havent read?"
+ exit 0;
+fi
+#===============================================================================
+echo "Initialisation"
+
+echo "Stopping Iptables!"
+service iptables stop
+
+
+printf "Networking :-"
+echo "Do we need a proxy?"
+echo "If not press enter else enter ip:port:"
+read proxy_address
+export http_proxy=$proxy_address; export https_proxy=$proxy_address;
+echo "What is the FQDN of this box?"
+echo "IE spacewalk.your.lan"
+echo "This *MUST* be resolvable by dns"
+echo "If not add this and come back later"
+read syshostname
+sed -i '/HOSTNAME=/c\HOSTNAME='$syshostname'' /etc/sysconfig/network
+echo ""
+echo "See Config Below - enter if right : "
+cat /etc/sysconfig/network
+read conti
+#===============================================================================
+echo " Get / Prep spacewalk :-"
+rpm -Uvh http://yum.spacewalkproject.org/2.0/RHEL/6/x86_64/spacewalk-repo-2.0-3.el6.noarch.rpm
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+yum -y install wireshark sssd htop
+sleep 3 
+echo "Enter New DB password : "
+read dbpassword
+cat > setup.ans << EOF
+admin-email = email@necurity.co.uk
+ssl-set-cname  = $syshostname
+ssl-set-common = $syshostname
+ssl-set-org = Necurity
+ssl-set-org-unit = spacewalk
+ssl-set-city = Bradford
+ssl-set-state = west Yorkshire
+ssl-set-country = GB
+ssl-password = Spac3Walk
+ssl-set-email = email@necurity.co.uk
+ssl-config-sslvhost = Y
+db-backend=postgresql
+db-name=spaceschema
+db-user=spaceuser
+db-password=$dbpassword
+db-host=
+db-port=5432
+enable-tftp=Y
+EOF
+cat > /etc/yum.repos.d/jpackage-generic.repo << EOF
+[jpackage-generic]
+name=JPackage generic
+mirrorlist=http://www.jpackage.org/mirrorlist.php?dist=generic&type=free&release=5.0
+enabled=1
+gpgcheck=1
+gpgkey=http://www.jpackage.org/jpackage.asc
+EOF
+#===============================================================================
+echo "Installing Spacewalk"
+yum install spacewalk-setup-postgresql spacewalk-postgresql spacecmd -y
+sleep 3
+spacewalk-setup --disconnected --answer-file=setup.ans
+sleep 3
+spacewalk-service status
+yum install -y spacewalk-utils spacecmd
+sleep 3
+#===============================================================================
+echo "Starting Ldap Stuff "
+echo "pam_auth_service = rhn-satellite" >> /etc/rhn/rhn.conf
+echo "What do I mail from?"
+read $newname
+echo "web.default_mail_from=spacewalk@$newname" >> /etc/rhn/rhn.conf
+echo "web.maximum_config_file_size=20480000" >> /etc/rhn/rhn.conf
+cat > /etc/pam.d/rhn-satellite << EOF
+#%PAM-1.0
+auth		include		system-auth
+account		include		system-auth
+password	substack	system-auth
+EOF
+#===============================================================================
+echo "Do I need a Rely Host to send emails?"
+read relay_host
+postconf -e 'relayhost = $relay_host'
+#===============================================================================
+echo "Curl to set up username - Enter to continue wait a few secs"
+echo "Sorry its not fully automatic"
+sleep 3
+read conti
+curl  https://$syshostname/rhn/newlogin/CreateFirstUser.do --insecure -D - | egrep -i "cookie|csrf_token" | sed 's/.*="/\&csrf_token=/ ;s/".*//;s/^.*: //'
+echo "Enter JSession : "
+read cookie
+echo "Enter CSRF : "
+read csrf
+
+curl --noproxy '*' --cookie "$cookie" --data "login=root&desiredpassword=InsecurePassword&desiredpasswordConfirm=InsecurePassword&firstNames=Tech&lastName=support&email=email@necurity.co.uk&prefix=Dr.&account_type=create_sat&csrf_token=-$csrf" https://$syshostname/rhn/newlogin/CreateFirstUserSubmit.do --insecure -D - 
+#===============================================================================
+echo "Updating It to 22"
+yum clean all
+rpm -Uvh http://yum.spacewalkproject.org/2.2/RHEL/6/x86_64/spacewalk-repo-2.2-1.el6.noarch.rpm
+yum upgrade -y
+sleep 3
+/usr/sbin/spacewalk-service stop
+/usr/sbin/spacewalk-service status
+echo "Is Spacewalk stopped? if so press enter to continue:"
+read conti
+service postgresql start
+echo "Is postgres started? if so press enter to continue:"
+echo "sleeping 20 seconds"
+sleep 30
+service postgresql status
+read conti
+/usr/bin/spacewalk-schema-upgrade -y
+spacewalk-setup --disconnected --external-postgresql --upgrade --answer-file=setup.ans
+/usr/sbin/spacewalk-service start
+/usr/sbin/spacewalk-service status
+#===============================================================================
+echo "Enabling errata"
+mkdir errata
+wget http://cefs.steve-meier.de/errata-import.tar
+wget -N http://cefs.steve-meier.de/errata.latest.xml
+tar -xvf errata-import.tar
+mv errata-import.pl /usr/local/bin/errata-import.pl
+chmod +x /usr/local/bin/errata-import.pl
+yum install perl-Text-Unidecode perl-XML-Simple -y
+sleep 3
+echo "errata-import.sh" > /etc/cron.weekly/errata.sh
+echo '''
+wget -N http://cefs.steve-meier.de/errata.latest.xml
+SPACEWALK_USER=root
+SPACEWALK_PASS="InsecurePassword"
+export SPACEWALK_USER SPACEWALK_PASS
+errata-import.pl --publish --server 127.0.0.1 --errata errata.latest.xml --publish
+SPACEWALK_USER="NULL"
+SPACEWALK_PASS="NULL"
+unset $SPACEWALK_USER
+unset $SPACEWALK_PASS
+''' > /usr/local/bin/errata-import.sh
+chmod +x /etc/cron.weekly/errata.sh
+chmod +x /usr/local/bin/errata-import.pl
+chmod +x /usr/local/bin/errata-import.sh
+#===============================================================================
+echo "Fixing cobbler"
+yum install cobbler-loaders -y
+cobbler check
+cp /usr/share/syslinux/menu.c32 /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/
+/etc/init.d/xinetd start
+#===============================================================================
+updatedb
+#===============================================================================
+echo "Doing the network"
+#cat > cat /etc/sysconfig/network-scripts/ifcfg-eth0 << EOF
+#IPADDR=0.0.0.0
+#NETMASK=255.255.254.0
+#GATEWAY=192.168.0.254
+#DHCP_HOSTNAME="spacewalk.your.lan"
+#HOSTNAME="spacewalk.your.lan"
+#IPV6INIT="no"
+#MTU="1500"
+#NM_CONTROLLED="yes"
+#ONBOOT="yes"
+#TYPE="Ethernet"
+#EOF
+echo "PLEASE DO THIS MANUALLY"
+echo "Its in your best interest"
+#===============================================================================
+echo "At the point spacewalk is installed, now configuring"
+wget http://mirror.ox.ac.uk/sites/mirror.centos.org/6.6/isos/x86_64/CentOS-6.6-x86_64-bin-DVD1.iso
+mkdir /var/distro-trees/centos6-64 -p
+chmod 755 /var/
+chmod 755 /var/distro-trees/
+chmod 755 /var/distro-trees/centos6-64/
+mount -o rw,loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos6-64/
+# I need to learn how to do this withouut input
+authconfig-tui
+/etc/init.d/sssd restart;
+echo "Can you please check to make sure the iso is mounted :) ?"
+echo "Press enter to continue"
+mount
+read
+#===============================================================================
+echo "Spacecmd stuff"
+echo "Spacecmd Repo making"
+
+echo "Making Centos 6"
+/usr/bin/spacewalk-common-channels -v -u root -p "InsecurePassword"  -s $syshostname -k 'unlimited' -a x86_64 'centos6*'
+
+echo "Making EPEL"
+spacecmd -u root -p "InsecurePassword" -- repo_create -n "External - CentOS 6 EPEL (x86_64)" -u "https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=x86_64"
+spacecmd -u root -p "InsecurePassword" -- softwarechannel_create -n "CentOS 6 EPEL (x86_64)" -l centos6-x86_64-epel -p centos6-x86_64 -a x86_64
+spacecmd -u root -p "InsecurePassword" --  softwarechannel_addrepo "centos6-x86_64-epel" "External - CentOS 6 EPEL (x86_64)"
+
+echo "SpaceCMD Org rename"
+spacecmd -u root -p "InsecurePassword" -- org_rename "Spacewalk Default Organization" $newname
+
+echo "Spacecmd distro create"
+spacecmd -u root -p "InsecurePassword" -- distribution_create -n centos6 -p /var/distro-trees/centos6-64/ -b centos6-x86_64 -t rhel_6
+
+echo "spacecmd config"
+#spacecmd -u root -p "InsecurePassword" -- configchannel_create -n CONF -l CONF -d "Config files"
+
+#for i in /root/configs/*; do
+#spacecmd -u root -p "InsecurePassword" -- configchannel_addfile -c CONF -p "/$i" -m 0640 -f "$i"
+#done
+echo "Skipping config files"
+
+echo "Spacecmd kickstart"
+#spacecmd -u root -p "InsecurePassword" --  kickstart_import -f "filehere" -n 0_Name -d centos6  -v none
+echo "No kickstarts :( "
+
+echo "Spacecmd create admins"
+spacecmd -u root -p "InsecurePassword" -- user_create -u Archer -f Sterling -l Sterling -e A.Sterling@isis.spy -p dangerzone --pam
+
+spacecmd -u root -p "InsecurePassword" -- user_create -u readonly -f read -l only -e mail@necurity.co.uk -p defaultpassword
+
+echo "Elevate Users"
+for i in Archer; do
+spacecmd -u root -p "InsecurePassword" -- user_addrole $i satellite_admin
+spacecmd -u root -p "InsecurePassword" -- user_addrole $i org_admin
+done
+
+
+echo "============================================="
+echo "                  ** WARNING **"
+echo "           THERE IS A MAINTAINACE ACCOUNT"
+echo "           THIS MUST BE REMOVED"
+echo "           IT IS THERE TO OBTAIN INITAL ACCESS ONLY"
+echo "           THIS MUST BE REMOVED"
+echo "           ALSO IPTABLES IS STOPPED"
+echo "                  ** WARNING **"
+echo "============================================="
+#===============================================================================
+# Call home :)
+wget https://necurity.co.uk/allinonespacewalkused -O /dev/null
+
+#===============================================================================
+# You cant see me ima giant comment
+: <<'END'
+EPEL http://dl.fedoraproject.org/pub/epel/6/x86_64/
+
+Centos_6.4_x64_EPEL
+This are the Extra packages.
+https://fedoraproject.org/static/0608B895.txt
+0608B895
+8C3B E96A F230 9184 DA5C  0DAE 3B49 DF2A 0608 B895
+
+Centos_6.4_x64_space
+this is spacewalk 2.0
+http://yum.spacewalkproject.org/RPM-GPG-KEY-spacewalk-2012
+863A853D
+8F85 8A91 03E3 3965 6BE9  64D0 0E64 6F68 863A 853D
+
+Centos_6.4_x64_space_client
+these are the client tools needed to regiter spacewalk
+http://yum.spacewalkproject.org/RPM-GPG-KEY-spacewalk-2012
+863A853D
+8F85 8A91 03E3 3965 6BE9  64D0 0E64 6F68 863A 853D
+END

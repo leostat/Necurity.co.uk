@@ -20,8 +20,7 @@ summary:
 </ol>
 </div>
 
-<h1> ! Unfinished Content Below!</h1>
-<p> Apologies people, The content below isnt finished yet (It still works though), its close to but not there yet, I "lived" this so i can see what a proper blog post looks like in the new layout of my site, Sorry for any incoviance caused! In the mean time feel free to drop a comment at the bottom, or a email to myself if you think there is something wrong / missing / confusing!</p>
+
 <main>
 <div id="pagesummary">
 <h2 id="Summary"> <a>Summary </a> </h2>
@@ -41,7 +40,7 @@ Throughout this I assume that you already have some of the basics needed to use 
 </p>
 
 <p>
-The "All in one" script at the end aims to do all of this automatically, I don't recommend running this unless you are familiar with bash and read it first. It has a simple check to make sure you don't just run it by accident, which will force you to read the script. It will also call home to my server, (just a wget to /script/spaceallinone) this can be removed by deleting line +1XX. It uses a hard coded root account, this should be removed before putting into production.
+The <a href="/scripts/allinone.txt">"All in one"</a> script at the end aims to do all of this automatically, I don't recommend running this unless you are familiar with bash and read it first. It has a simple check to make sure you don't just run it by accident, which will force you to read the script. It will also call home to my server, (just a wget to allinonespacewalkused) this can be removed by deleting line +250. It uses a hard coded root account, this should be removed before putting into production.
 </p>
 
 </div>
@@ -71,7 +70,7 @@ EOF
 yum install spacewalk-setup-postgresql spacewalk-postgresql
 {% endhighlight %}
 <p>
-I have had some problems installing spacewalk 2.0+ directly, but have found that installing then updating spacewalk 1.9 works first time.
+I have had some problems installing spacewalk 2.0+ directly, but have found that installing then updating spacewalk 2.0 works first time.
 </p>
 
 <p>
@@ -154,7 +153,7 @@ After navigating to the above page, click create new channel, the fields are sel
 IMG GOES HERE
 
 <p>
-After this create a child channel to be associated with the parent, naming this as the repository it represents. For example you may want to have the OS, updates, EPEL, and the Spacewalk tools. You will want to go back to the create page and make a few more channels until you have everything you need.
+After this create a child channel to be associated with the parent, naming this as the repository it represents. For example you may want to have the Updates, EPEL, and the Spacewalk tools. You will want to go back to the create page and make a few more channels until you have everything you need.
 </p>
 
 IMG GOES HERE
@@ -264,7 +263,18 @@ Managing the backup of Spacewalk is pretty easy, everything the system does is s
 # Start Spacewalk
 {% endhighlight %}
 
+<h2 id="Resources"><a>Useful resources And Troubleshooting</a></h2>
+<p>
+The <a href="https://fedorahosted.org/spacewalk/">Fedora Hosted</a> page and corresponding wiki contains everything you need to get up and started. Its one of the best resources to check documentation as its the official home! Another great place to check is the <a href="https://access.redhat.com/site/documentation/Red_Hat_Network_Satellite/"> official RedHat Satellite Documentation</a>, its free to view and is still relevant to Spacewalk (as the two are essentially the same product). If your stuck on something and needing a hand then you can always check out the <a href="https://www.redhat.com/archives/spacewalk-list/"> official Spacewalk mailing list </a>.
+</p>
 
 
+<h2 id="All"><a>The all in one Spacewalk Script</a></h2>
+<p>
+I had to install Spacewalk a few times when I was testing it so I wrote a script to do everything for me that this post covers it can be found <a href="/scripts/allinone.txt">"All in one"</a>, you may find it useful as a reference point when you are installing the service.  It calls home on line 250 so feel free to delete it. It also adds a root account, a archer account and a readon only account. Please please please please change the passwords.
+</p>
+</main>
 <hr>
+
+
 </div>

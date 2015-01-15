@@ -20,8 +20,6 @@
 &lt;/ol&gt;
 &lt;/div&gt;
 
-&lt;h1&gt; ! Unfinished Content Below!&lt;/h1&gt;
-&lt;p&gt; Apologies people, The content below isnt finished yet (It still works though), its close to but not there yet, I &quot;lived&quot; this so i can see what a proper blog post looks like in the new layout of my site, Sorry for any incoviance caused! In the mean time feel free to drop a comment at the bottom, or a email to myself if you think there is something wrong / missing / confusing!&lt;/p&gt;
 &lt;main&gt;
 &lt;div id=&quot;pagesummary&quot;&gt;
 &lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
@@ -41,7 +39,7 @@ Throughout this I assume that you already have some of the basics needed to use 
 &lt;/p&gt;
 
 &lt;p&gt;
-The &quot;All in one&quot; script at the end aims to do all of this automatically, I don't recommend running this unless you are familiar with bash and read it first. It has a simple check to make sure you don't just run it by accident, which will force you to read the script. It will also call home to my server, (just a wget to /script/spaceallinone) this can be removed by deleting line +1XX. It uses a hard coded root account, this should be removed before putting into production.
+The &lt;a href=&quot;/scripts/allinone.txt&quot;&gt;&quot;All in one&quot;&lt;/a&gt; script at the end aims to do all of this automatically, I don't recommend running this unless you are familiar with bash and read it first. It has a simple check to make sure you don't just run it by accident, which will force you to read the script. It will also call home to my server, (just a wget to allinonespacewalkused) this can be removed by deleting line +250. It uses a hard coded root account, this should be removed before putting into production.
 &lt;/p&gt;
 
 &lt;/div&gt;
@@ -264,9 +262,20 @@ Managing the backup of Spacewalk is pretty easy, everything the system does is s
 &lt;span class=&quot;c&quot;&gt;# Start Spacewalk&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;h2 id=&quot;Resources&quot;&gt;&lt;a&gt;Useful resources And Troubleshooting&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+The &lt;a href=&quot;https://fedorahosted.org/spacewalk/&quot;&gt;Fedora Hosted&lt;/a&gt; page and corresponding wiki contains everything you need to get up and started. Its one of the best resources to check documentation as its the official home! Another great place to check is the &lt;a href=&quot;https://access.redhat.com/site/documentation/Red_Hat_Network_Satellite/&quot;&gt; official RedHat Satellite Documentation&lt;/a&gt;, its free to view and is still relevant to Spacewalk (as the two are essentially the same product). If your stuck on something and needing a hand then you can always check out the &lt;a href=&quot;https://www.redhat.com/archives/spacewalk-list/&quot;&gt; official Spacewalk mailing list &lt;/a&gt;.
+&lt;/p&gt;
 
+
+&lt;h2 id=&quot;All&quot;&gt;&lt;a&gt;The all in one Spacewalk Script&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+I had to install Spacewalk a few times when I was testing it so I wrote a script to do everything for me that this post covers it can be found &lt;a href=&quot;/scripts/allinone.txt&quot;&gt;&quot;All in one&quot;&lt;/a&gt;, you may find it useful as a reference point when you are installing the service.  It calls home on line 250 so feel free to delete it. It also adds a root account, a archer account and a readon only account. Please please please please change the passwords.
+&lt;/p&gt;
 
 &lt;hr /&gt;
+
+
 &lt;/div&gt;
 &lt;/main&gt;
 </description>
