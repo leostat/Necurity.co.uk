@@ -8,16 +8,10 @@
 # Each block is an action
 # Bellow is to stop people "accidently" running it
 #===============================================================================
-echo "Whats the magic word?"
-read magicword 
-if [[ $magicword != "Pop" ]]; then;
- echo "Nub, do you often run code you havent read?"
- exit 0;
-fi
-#===============================================================================
 echo "Initialisation"
 
 echo "Stopping Iptables!"
+echo "Yes this is bad"
 service iptables stop
 
 
