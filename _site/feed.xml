@@ -311,7 +311,14 @@ gem install jekyll_ext
 
 &lt;span class=&quot;c&quot;&gt;# Set up some extra stuff for my enviroment, had to escape the %&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;set backspace=indent,eol,start&amp;quot;&lt;/span&gt; &amp;gt;&amp;gt; .vimrc
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;export PS1=&amp;quot;\D{\%d-\%m \%k:\%M} : \u : \W \$ &amp;quot;&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; .bashrc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;export PS1=&amp;quot;\D{\%d-\%m \%k:\%M} : \u : \W \$ &amp;quot;&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; .bashrc
+
+&lt;span class=&quot;c&quot;&gt;#Micheal also pointed out a bug fix for your bashrc&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#https://github.com/rubygems/rubygems/issues/863&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Thanks!&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;LANG=C.BINARY gem&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
 
 
 &lt;/div&gt;
