@@ -53,7 +53,7 @@ Spacewalk like most Linux programs is pretty easy to install and get up running,
 
 {% highlight bash %}
 # Grab the repo
-rpm -Uvh http://yum.spacewalkproject.org/2.0/RHEL/6/x86_64/spacewalk-repo-2.0-3.el6.noarch.rpm
+rpm -Uvh http://yum.spacewalkproject.org/2.2/RHEL/5/x86_64/spacewalk-repo-2.2-1.el5.noarch.rpm
 # Enable Open JDK to be installed on centos
 rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 # Jpacakge Dependancys (Spacewalk needs Java to work properly)
@@ -69,9 +69,6 @@ EOF
 # Install spacewalk - Postgress packages
 yum install spacewalk-setup-postgresql spacewalk-postgresql
 {% endhighlight %}
-<p>
-I have had some problems installing spacewalk 2.0+ directly, but have found that installing then updating spacewalk 2.0 works first time.
-</p>
 
 <p>
 Setting the initial config for Spacewalk can be done in two ways, either interactively or by providing an answers file for automated install, as i'm a fan of automation the answers file is used (if you don't want to you just run the command minus answer file flag). You need to make sure that the server has a FQDN as well as its hostname set, whatever the hostname of the box is currently set to when you start the install will decide what Cname is used in the SSL certificate. If you are in possession of something like a * certificate you are able to use this and can install it later. 
@@ -141,22 +138,18 @@ allows an administrator to create all channels and repos for supported distros a
 {%endhighlight%}
 
 <p>
-This can also be done through the web interface. To mirror a Repository through the interface, However I highly recommend you use the command line. First log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is called the parent channel. This channel ties together all the content from child channels and allows easier management of multiple repositories and clients. 
+This can also be done through the web interface. However I highly recommend you use the command line. If you wish to use the web interface, first log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is the parent channel which holds the base OS and ties together all the content from child channels and allows easier management of multiple repositories and clients. 
 
 </p>
-IMG GOES HERE
 
 <p>
 After navigating to the above page, click create new channel, the fields are self explanatory so fill them in and click create.
 </p>
 
-IMG GOES HERE
-
 <p>
 After this create a child channel to be associated with the parent, naming this as the repository it represents. For example you may want to have the Updates, EPEL, and the Spacewalk tools. You will want to go back to the create page and make a few more channels until you have everything you need.
 </p>
 
-IMG GOES HERE
 <p>
 Now add the repository, don't forget to add the GPG key for the repo.  The GPG keys will also need to be pushed to clients to allow them to install packages from your server, and can be either installed during kickstart, or manually after client registration. Spacewalk is able to sync with both RPM based systems and APT based ones.
 </p>
@@ -164,8 +157,6 @@ Now add the repository, don't forget to add the GPG key for the repo.  The GPG k
 <p>
 Finally the newly added repository needs linking to the created channel, this is done though the manage software channels, and is just another click away.
 </p>
-
-IMG HERE,
 
 <p>
 After adding the channels through either the web interface or the command line, begin the long processes of syncing up the RPMs with the Spacewalk server, this can be done either manually as and when needed or by a schedule. 
@@ -182,28 +173,26 @@ To do this through the web interface navigate to the channel you want to sync, R
 </p>
 
 <p>
-You are also able to push your own RPMS to the repositories. The command <a href="https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush">rhn_push</a> can be used. This is useful for adding applications that are either internally generated, or are not available through standard repositories such as Nessus
+You are also able to push your own RPMS to the repositories. The command <a href="https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush">rhn_push</a> can be used. This is useful for adding applications that are either internally generated, pre-downloaded packages such as those on the install media,or are not available through standard repositories such as Nessus
 </p>
 
 {%highlight bash%}
-/usr/bin/spacewalk-repo-sync --channel $Channel_name
+/usr/bin/rhnpush -v --channel=$Channel_name --server=https://localhost/APP --dir=.
 {%endhighlight%}
 
 <h3>Activation Keys</h3>
 <p>
-To be able to register clients to the server an activation key needs creating. These keys allow clients access to the different functions of Spacewalk, when creating the key you have the option of creating a universal default key which will be used in the case of a key not being provided when registering clients. You are also able to set a maximum number of times each key can be used. To create a new key navigate to system, activation keys create new keys</p>
+To be able to register clients to the server an activation key needs creating. These keys allow clients access to the different functions of Spacewalk, when creating the key you have the option of creating a universal default key which will be used in the case of a key not being provided when registering clients. You are also able to set a maximum number of times each key can be used. To create a new key navigate to the system tab, then under activation keys the option create new key
+</p>
 
-Img HERE
-
-<p> When creating the key you must provide some </p>
-
-<p>Activation keys can also be used to automatically install software on systems, and add configuration management. These are one of the many ways Spacewalk offers the grouping of servers. 
+<p>
+Activation keys can also be used to automatically install software on systems, and add configuration management. These are one of the many ways Spacewalk offers the grouping of servers.  
 </p>
 
 
 <h3> Kickstarts</h3>
 <p>
-A kickstart (automated install) can be added now. The overall process to do this is, create a distribution that the server can boot, create individual profiles for computers and then booting them. The kickstart system is provided by Xinet.d and Cobbler. Before making any profiles confirm that the system is able to do a kickstart by confirming cobbler is running and ready. A few times to get PXE working I have also needed to copy the Cobbler menu to the TFTP directory. I am assuming at this point you already have the distribution ISO you wish to use. 
+A kickstart (automated install) can be created now. The overall process to do this is, create a distribution that the server can boot, create individual profiles for computers and then booting them. The kickstart system is provided by Xinet.d and Cobbler. Before making any profiles confirm that the system is able to do a kickstart by confirming cobbler is running and ready. A few times to get PXE working I have also needed to copy the Cobbler menu to the TFTP directory. I am assuming at this point you already have the distribution ISO you wish to use. 
 </p>
 {% highlight bash %}
 # Does it think its okay?
@@ -213,44 +202,44 @@ cobbler check
 # You probably want to be able to PXE boot stuff
 yum install cobbler-loaders
 # Copy files to make it work, remember you already need DHCP in place. This is a known bug and is documented here:
-# http://google.com
+# https://bugzilla.redhat.com/show_bug.cgi?id=872951
 
 cp /etc/cobbler/pxe/menu.c32  /etc/cobbler/pxe/pxelinux.0  /var/lib/tftpboot/
 # Mount the Disk - The path needs to match what is set below in the distribution
-mkdir -p /var/distro-trees/centos-66-64/
-mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-66-64/
+mkdir -p /var/distro-trees/centos-6/
+mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-6/
 {% endhighlight %}
 <p>
 After this create the distribution though either the web interface (systems -> kickstarts -> distributions -> create new distribution ), or via the command line.
 </p>
-IMG HERE
 
 <p>
- If you already have some kickstart files you would like to use (great!) then you can chose to upload and use these (they however will be none editable, I am making a tool to fix this though :) ), if not then click create and select all the options you want. There are kickstarts available online for most situations, for example NIST offer a workstation build based on RH5. After adding the kickstart, its just a case of PXE booting whatever device is needed and your done. It should be noted at this point that if you would like clients to be able to install software out of the repository they must have the keys for the packages installed else this will cause a error. More information about kickstarts is available in other blog posts to keep the size of this one down.
+ If you already have some kickstart files you would like to use (great!) then you can chose to upload and use these (they however will be none editable, I am making a tool to fix this though :) ), if not then click create and select all the options you want. There are kickstarts available online for most situations, for example NIST offer a <a href="http://usgcb.nist.gov/usgcb/content/configuration/workstation-ks.cfg">workstation build based on RH5</a>. After adding the kickstart, its just a case of PXE booting whatever device is needed and your done. You must deploy the spacewalk CA certificate and repository GPG keys to the system being kickstarted for the system to install properly. More information about kickstarts is available in other blog posts to keep the size of this one down.
 </p>
-
-<p>
-At this point you should have a Spacewalk server installed ready to use. In the next post I will go through client Management to keep this size of this post down. If you have any problems drop a message below, or to the Spacewalk mailing list! 
-</p>
-
-
 
 <hr>
 
 <h2 id="Clients"><a>Client Management</a></h2>
 <p>
-You will probably already have systems that are you wish to be managed by Spacewalk, and these are easily registered. All you have to do is install the client program on a server and provide it with an activation key that you have created previously. You need to make sure that you download the SSL certificate from the Spacewalk server before you register the system. Sending actions over http is not recommended for the obvious security implications.
+You will probably already have systems that are you wish to be managed by Spacewalk, and these are easily registered. All you have to do is install the client program on a server and provide it with an activation key that you have created previously. You need to make sure that you download the SSL certificate from the Spacewalk server before you register the system. Sending actions over http is not recommended for the obvious security implications. An always up to date guide is available from <a href="https://fedorahosted.org/spacewalk/wiki/RegisteringClients"> the spacewalk wiki</a>.
 </p>
 
 {% highlight bash %}
-# Grab the needed Repo
-# Grab the client
-# Grab the ssl cert from the server, drop it to the default location
+# Install spacewalk client repository
+rpm -Uvh http://yum.spacewalkproject.org/2.2-client/RHEL/6/x86_64/spacewalk-client-repo-2.2-1.el6.noarch.rpm
+# Install the Client
+yum install rhn-client-tools rhn-check rhn-setup rhnsd m2crypto yum-rhn-plugin
+# Install the SSL certificate from the server
+yum install http://spacewalk.lan/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm
 # Register clients
+rhnreg_ks --serverUrl=https://spacewalk.lan/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=1-key --username $spacewalkusername --force
 {% endhighlight %}
+
 <p>
-During the clients registration any actions that are associated with the key are carried out, actions that have completed are available under the history tab of the system on the web interface. And now that the client is registered it will check in every 240 minutes (4 hours) by default. All the client actions are initiated from the client not the server, and will take place over either port 80 or 443.
+During the clients registration any actions that are associated with the key are carried out, actions that have completed are available under the history tab of the system on the web interface. Now that the client is registered it will check in every 240 minutes (4 hours) by default. When triggered the rhn_check command runs and contacts the server to check for actions, and will take place over either port 80 or 443.
 </p>
+
+<hr>
 
 <h2 id="Backup"><a>Backing It all up</a></h2>
 <p>
