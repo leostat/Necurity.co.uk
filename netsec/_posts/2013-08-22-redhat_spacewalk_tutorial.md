@@ -208,6 +208,7 @@ cp /etc/cobbler/pxe/menu.c32  /etc/cobbler/pxe/pxelinux.0  /var/lib/tftpboot/
 # Mount the Disk - The path needs to match what is set below in the distribution
 mkdir -p /var/distro-trees/centos-6/
 mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-6/
+# If you are booting a centos 7 disk it MUST be the everything ISO
 {% endhighlight %}
 <p>
 After this create the distribution though either the web interface (systems -> kickstarts -> distributions -> create new distribution ), or via the command line.
