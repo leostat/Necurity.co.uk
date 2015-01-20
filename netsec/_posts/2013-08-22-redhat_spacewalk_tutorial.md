@@ -53,7 +53,7 @@ Spacewalk like most Linux programs is pretty easy to install and get up running,
 
 {% highlight bash %}
 # Grab the repo
-rpm -Uvh http://yum.spacewalkproject.org/2.2/RHEL/5/x86_64/spacewalk-repo-2.2-1.el5.noarch.rpm
+rpm -Uvh http://yum.spacewalkproject.org/2.2/RHEL/6/x86_64/spacewalk-repo-2.2-1.el6.noarch.rpm
 # Enable Open JDK to be installed on centos
 rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 # Jpacakge Dependancys (Spacewalk needs Java to work properly)
