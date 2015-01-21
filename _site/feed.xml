@@ -88,7 +88,7 @@ cat &amp;gt; setup.ans &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt; EOF&lt;/
 &lt;span class=&quot;s&quot;&gt;db-name=spaceschema&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;db-user=spaceuser&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;db-password=secure_spacepw&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;db-host=host&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;db-host=127.0.0.1&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;db-port=5432&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;enable-tftp=Y&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;EOF&lt;/span&gt;
@@ -96,6 +96,10 @@ cat &amp;gt; setup.ans &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt; EOF&lt;/
 vim setup.ans
 &lt;span class=&quot;c&quot;&gt;#Check the hostname&lt;/span&gt;
 hostname
+&lt;span class=&quot;c&quot;&gt;# Set up iptables rather than disbaling it!&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# You need to add this to /etc/sysconfig/iptables&lt;/span&gt;
+iptables -A INPUT -p tcp -m multiport --dport 22,443,5222,69,5432  -j ACCEPT&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
 &lt;span class=&quot;c&quot;&gt;# Set the service up - Disconnected because we are using postgresql&lt;/span&gt;
 spacewalk-setup --disconnected --answer-file&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;setup.ans
 &lt;span class=&quot;c&quot;&gt;# Sometimes the setup reports fail when its not actually failed, so list what&amp;#39;s what&lt;/span&gt;
@@ -133,11 +137,17 @@ The easiest way to set up the Channels and repositories is via the command line,
 allows an administrator to create all channels and repos for supported distros almost instantly. In the below example the channels for fedora 20, the spacewalk client channels and centos 7 are created
 &lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;/usr/bin/spacewalk-common-channels -v -u admin -p pass -a x86_64 -k unlimited &lt;span class=&quot;s1&quot;&gt;&amp;#39;centos7*&amp;#39;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;fedora20*&amp;#39;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;spacewalk-client*&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Add the default repos to spacewalk for some common distros&lt;/span&gt;
+/usr/bin/spacewalk-common-channels -v -u admin -p pass -a x86_64 -k unlimited &lt;span class=&quot;s1&quot;&gt;&amp;#39;centos7*&amp;#39;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;fedora20*&amp;#39;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;spacewalk-client*&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#Add another repository. In this case EPEL&lt;/span&gt;
+spacecmd -u admin -p &lt;span class=&quot;s2&quot;&gt;&amp;quot;pass&amp;quot;&lt;/span&gt; -- repo_create -n &lt;span class=&quot;s2&quot;&gt;&amp;quot;External - CentOS 6 EPEL (x86_64)&amp;quot;&lt;/span&gt; -u &lt;span class=&quot;s2&quot;&gt;&amp;quot;https://mirrors.fedoraproject.org/metalink?repo=epel-6&amp;amp;arch=x86_64&amp;quot;&lt;/span&gt;
+
+spacecmd -u admin -p &lt;span class=&quot;s2&quot;&gt;&amp;quot;pass&amp;quot;&lt;/span&gt; -- softwarechannel_create -n &lt;span class=&quot;s2&quot;&gt;&amp;quot;CentOS 6 EPEL (x86_64)&amp;quot;&lt;/span&gt; -l centos6-x86_64-epel -p centos6-x86_64 -a x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;
-This can also be done through the web interface. However I highly recommend you use the command line. If you wish to use the web interface, first log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is the parent channel which holds the base OS and ties together all the content from child channels and allows easier management of multiple repositories and clients. 
+This can also be done through the web interface. However I highly recommend you use the command line. If you wish to use the web interface, first log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is the parent channel which holds the base OS and ties together all the content from channels and allows easier management of multiple repositories and clients. 
 
 &lt;/p&gt;
 
@@ -164,7 +174,11 @@ This  can be done on the command line through &lt;a href=&quot;https://fedorahos
 &lt;/p&gt;
 
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;/usr/bin/spacewalk-repo-sync --channel &lt;span class=&quot;nv&quot;&gt;$Channel_name&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Rename the organistion &lt;/span&gt;
+spacecmd -u admin -p &lt;span class=&quot;s2&quot;&gt;&amp;quot;pass&amp;quot;&lt;/span&gt; -- org_rename &lt;span class=&quot;s2&quot;&gt;&amp;quot;Spacewalk Default Organization&amp;quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Necurity.co.uk&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# You can push the RPM&amp;#39;s from the ISO rather than re-Downloading, see rhn-push&lt;/span&gt;
+/usr/bin/spacewalk-repo-sync --channel &lt;span class=&quot;nv&quot;&gt;$Channel_name&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;
@@ -172,20 +186,30 @@ To do this through the web interface navigate to the channel you want to sync, R
 &lt;/p&gt;
 
 &lt;p&gt;
-You are also able to push your own RPMS to the repositories. The command &lt;a href=&quot;https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush&quot;&gt;rhn_push&lt;/a&gt; can be used. This is useful for adding applications that are either internally generated, pre-downloaded packages such as those on the install media,or are not available through standard repositories such as Nessus
+You are also able to push your own RPMS to the repositories. The command &lt;a href=&quot;https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush&quot;&gt;rhn_push&lt;/a&gt; can be used. This is useful for adding applications that are either internally generated, pre-downloaded packages such as those on the install media,or are not available through standard repositories such as Nessus. First we need to create a mount point for the ISO and then push the RPM's to the server.
 &lt;/p&gt;
 
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;/usr/bin/rhnpush -v --channel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Channel_name&lt;/span&gt; --server&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://localhost/APP --dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Mount the Iso&lt;/span&gt;
+mkdir /var/distro-trees/centos6-64 -p
+chmod &lt;span class=&quot;m&quot;&gt;755&lt;/span&gt; /var/
+chmod &lt;span class=&quot;m&quot;&gt;755&lt;/span&gt; /var/distro-trees/
+chmod &lt;span class=&quot;m&quot;&gt;755&lt;/span&gt; /var/distro-trees/centos6-64/
+mount -o rw,loop CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos6-64/
+&lt;span class=&quot;c&quot;&gt;# Grab the server cert so we can push RPMs&lt;/span&gt;
+wget https://spacewalk.h1.lg.lc/pub/RHN-ORG-TRUSTED-SSL-CERT -O /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --no-check-certificate
+&lt;span class=&quot;c&quot;&gt;# Push the RPMS&lt;/span&gt;
+/usr/bin/rhnpush -v --channel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;centos6-x86_64 --server&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://localhost/APP --dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;/var/distro-trees/centos6-64/Packages&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# At this point it is worth pushing the spacewalk client certificate to a repo as well so it can be installed at kickstart / register time&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Activation Keys&lt;/h3&gt;
 &lt;p&gt;
-To be able to register clients to the server an activation key needs creating. These keys allow clients access to the different functions of Spacewalk, when creating the key you have the option of creating a universal default key which will be used in the case of a key not being provided when registering clients. You are also able to set a maximum number of times each key can be used. To create a new key navigate to the system tab, then under activation keys the option create new key
+To be able to register clients to the server an activation key needs creating (unless you used the common-channels command then its allready done). These keys allow clients access to the different functions of Spacewalk, when creating the key you have the option of creating a universal default key which will be used in the case of a key not being provided when registering clients. You are also able to set a maximum number of times each key can be used. To create a new key navigate to the system tab, then under activation keys the option create new key
 &lt;/p&gt;
 
 &lt;p&gt;
-Activation keys can also be used to automatically install software on systems, and add configuration management. These are one of the many ways Spacewalk offers the grouping of servers.  
+Activation keys can also be used to automatically install software on systems, and add configuration management. These are one of the many ways Spacewalk offers the grouping of servers. You tie the activation key to a PC through either kickstart's or registering a existing system/
 &lt;/p&gt;
 
 
@@ -212,6 +236,11 @@ mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-6/
 &lt;p&gt;
 After this create the distribution though either the web interface (systems -&amp;gt; kickstarts -&amp;gt; distributions -&amp;gt; create new distribution ), or via the command line.
 &lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;spacecmd -u admin -p &lt;span class=&quot;s2&quot;&gt;&amp;quot;pass&amp;quot;&lt;/span&gt; -- distribution_create -n centos6 -p /var/distro-trees/centos6-64/ -b centos6-x86_64 -t rhel_6&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
 
 &lt;p&gt;
  If you already have some kickstart files you would like to use (great!) then you can chose to upload and use these (they however will be none editable, I am making a tool to fix this though :) ), if not then click create and select all the options you want. There are kickstarts available online for most situations, for example NIST offer a &lt;a href=&quot;http://usgcb.nist.gov/usgcb/content/configuration/workstation-ks.cfg&quot;&gt;workstation build based on RH5&lt;/a&gt;. After adding the kickstart, its just a case of PXE booting whatever device is needed and your done. You must deploy the spacewalk CA certificate and repository GPG keys to the system being kickstarted for the system to install properly. More information about kickstarts is available in other blog posts to keep the size of this one down.

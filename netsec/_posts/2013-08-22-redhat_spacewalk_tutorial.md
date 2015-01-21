@@ -138,11 +138,18 @@ The easiest way to set up the Channels and repositories is via the command line,
 allows an administrator to create all channels and repos for supported distros almost instantly. In the below example the channels for fedora 20, the spacewalk client channels and centos 7 are created
 </p>
 {%highlight bash%}
+# Add the default repos to spacewalk for some common distros
 /usr/bin/spacewalk-common-channels -v -u admin -p pass -a x86_64 -k unlimited 'centos7*' 'fedora20*' 'spacewalk-client*'
+
+#Add another repository. In this case EPEL
+spacecmd -u admin -p "pass" -- repo_create -n "External - CentOS 6 EPEL (x86_64)" -u "https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=x86_64"
+
+spacecmd -u admin -p "pass" -- softwarechannel_create -n "CentOS 6 EPEL (x86_64)" -l centos6-x86_64-epel -p centos6-x86_64 -a x86_64
+
 {%endhighlight%}
 
 <p>
-This can also be done through the web interface. However I highly recommend you use the command line. If you wish to use the web interface, first log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is the parent channel which holds the base OS and ties together all the content from child channels and allows easier management of multiple repositories and clients. 
+This can also be done through the web interface. However I highly recommend you use the command line. If you wish to use the web interface, first log in and navigate to the Manage Software Channels section under the channels Tab. The first channel that we will make is the parent channel which holds the base OS and ties together all the content from channels and allows easier management of multiple repositories and clients. 
 
 </p>
 
@@ -169,6 +176,10 @@ This  can be done on the command line through <a href="https://fedorahosted.org/
 </p>
 
 {%highlight bash%}
+# Rename the organistion 
+spacecmd -u admin -p "pass" -- org_rename "Spacewalk Default Organization" "Necurity.co.uk"
+
+# You can push the RPM's from the ISO rather than re-Downloading, see rhn-push
 /usr/bin/spacewalk-repo-sync --channel $Channel_name
 {%endhighlight%}
 
@@ -177,20 +188,30 @@ To do this through the web interface navigate to the channel you want to sync, R
 </p>
 
 <p>
-You are also able to push your own RPMS to the repositories. The command <a href="https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush">rhn_push</a> can be used. This is useful for adding applications that are either internally generated, pre-downloaded packages such as those on the install media,or are not available through standard repositories such as Nessus
+You are also able to push your own RPMS to the repositories. The command <a href="https://fedorahosted.org/spacewalk/wiki/UploadFedoraContent#rhnpush">rhn_push</a> can be used. This is useful for adding applications that are either internally generated, pre-downloaded packages such as those on the install media,or are not available through standard repositories such as Nessus. First we need to create a mount point for the ISO and then push the RPM's to the server.
 </p>
 
 {%highlight bash%}
-/usr/bin/rhnpush -v --channel=$Channel_name --server=https://localhost/APP --dir=.
+# Mount the Iso
+mkdir /var/distro-trees/centos6-64 -p
+chmod 755 /var/
+chmod 755 /var/distro-trees/
+chmod 755 /var/distro-trees/centos6-64/
+mount -o rw,loop CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos6-64/
+# Grab the server cert so we can push RPMs
+wget https://spacewalk.h1.lg.lc/pub/RHN-ORG-TRUSTED-SSL-CERT -O /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --no-check-certificate
+# Push the RPMS
+/usr/bin/rhnpush -v --channel=centos6-x86_64 --server=https://localhost/APP --dir="/var/distro-trees/centos6-64/Packages"
+# At this point it is worth pushing the spacewalk client certificate to a repo as well so it can be installed at kickstart / register time
 {%endhighlight%}
 
 <h3>Activation Keys</h3>
 <p>
-To be able to register clients to the server an activation key needs creating. These keys allow clients access to the different functions of Spacewalk, when creating the key you have the option of creating a universal default key which will be used in the case of a key not being provided when registering clients. You are also able to set a maximum number of times each key can be used. To create a new key navigate to the system tab, then under activation keys the option create new key
+To be able to register clients to the server an activation key needs creating (unless you used the common-channels command then its allready done). These keys allow clients access to the different functions of Spacewalk, when creating the key you have the option of creating a universal default key which will be used in the case of a key not being provided when registering clients. You are also able to set a maximum number of times each key can be used. To create a new key navigate to the system tab, then under activation keys the option create new key
 </p>
 
 <p>
-Activation keys can also be used to automatically install software on systems, and add configuration management. These are one of the many ways Spacewalk offers the grouping of servers.  
+Activation keys can also be used to automatically install software on systems, and add configuration management. These are one of the many ways Spacewalk offers the grouping of servers. You tie the activation key to a PC through either kickstart's or registering a existing system/
 </p>
 
 
@@ -217,6 +238,11 @@ mount -o loop ~/CentOS-6.6-x86_64-bin-DVD1.iso /var/distro-trees/centos-6/
 <p>
 After this create the distribution though either the web interface (systems -> kickstarts -> distributions -> create new distribution ), or via the command line.
 </p>
+
+{% highlight bash %}
+spacecmd -u admin -p "pass" -- distribution_create -n centos6 -p /var/distro-trees/centos6-64/ -b centos6-x86_64 -t rhel_6
+{% endhighlight %}
+
 
 <p>
  If you already have some kickstart files you would like to use (great!) then you can chose to upload and use these (they however will be none editable, I am making a tool to fix this though :) ), if not then click create and select all the options you want. There are kickstarts available online for most situations, for example NIST offer a <a href="http://usgcb.nist.gov/usgcb/content/configuration/workstation-ks.cfg">workstation build based on RH5</a>. After adding the kickstart, its just a case of PXE booting whatever device is needed and your done. You must deploy the spacewalk CA certificate and repository GPG keys to the system being kickstarted for the system to install properly. More information about kickstarts is available in other blog posts to keep the size of this one down.
