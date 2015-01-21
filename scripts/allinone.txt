@@ -1,7 +1,10 @@
 # Written by Alex Innes - 2014
 # Version 0.1
 # This will more than likely eat the nearest fluffy animal before installing Spacewalk
-# You need the DB backup before this
+# On a serious note it installs spacewalk 2.0 then updates it
+# TODO 
+# Install spacewalk 2.2 not 2.0
+# DO the iptables properly!
 #! /bin/sh
 #===============================================================================
 # Code is grouped inbetween these ^

@@ -89,7 +89,7 @@ db-backend=postgresql
 db-name=spaceschema
 db-user=spaceuser
 db-password=secure_spacepw
-db-host=host
+db-host=127.0.0.1
 db-port=5432
 enable-tftp=Y
 EOF
@@ -97,6 +97,10 @@ EOF
 vim setup.ans
 #Check the hostname
 hostname
+# Set up iptables rather than disbaling it!
+# You need to add this to /etc/sysconfig/iptables
+iptables -A INPUT -p tcp -m multiport --dport 22,443,5222,69,5432  -j ACCEPT;
+
 # Set the service up - Disconnected because we are using postgresql
 spacewalk-setup --disconnected --answer-file=setup.ans
 # Sometimes the setup reports fail when its not actually failed, so list what's what
