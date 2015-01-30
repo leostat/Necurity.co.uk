@@ -7,6 +7,67 @@
 		<atom:link href="http://necurity.co.uk/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Redhat Spacewalk Tutorial | Kickstarts and Configuration Management</title>
+				<description>&lt;div id=&quot;pagemenu&quot;&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;#Summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#config&quot;&gt;Configuration Files&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#kickstart&quot;&gt;Kickstarts&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#profiles&quot;&gt;Package Profiles&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#compare&quot;&gt;Comparing Files&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#res&quot;&gt;Other Resources&lt;/a&gt; &lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;pagesummary&quot;&gt;
+&lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Spacewalk offers the ability to generate and deploy Kickstarts (standard builds, keep an eye on packages that are installed on the system as well as compare any file that is on the remote machine to a local copy, giving I.T management a overview of which systems require patching or are not conforming to standards`. In this post I will go through the kickstart creation process and Spacewalks configuration management
+&lt;/p&gt;&lt;p&gt;
+This is a continuation of the &lt;a href=&quot;/tag/tech/spacewalk&quot;&gt; Spacewalk series &lt;/a&gt;, more information such as the initial setup and other features is available from the tag index. The establishment of standards and baselines in an enterprise environment is a important step toward improving the general state of information security. It allows the assurance that all systems used within the business meet minimum security requirements. 
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;maincontent&quot;&gt;
+&lt;h2 id=&quot;config&quot;&gt; &lt;a&gt; Configuration files  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Configuration files are group by channels, and configuration channels are assigned to systems through activation keys. By grouping config's and activation keys by function, management of servers becomes a breeze!. Configuration files can be managed via either the web interface under the configuration tab or via spacecmd. Spacecmd offers the following config management functions as of spacewalk 2.2. I highly recommend becoming familiar with the use of spacecmd as it makes spacewalk management much easier
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;spacecmd &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;SSM:0&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&amp;gt; configchannel_
+configchannel_addfile      configchannel_create       configchannel_diff         configchannel_forcedeploy  configchannel_listfiles    configchannel_sync
+configchannel_backup       configchannel_delete       configchannel_export       configchannel_import       configchannel_listsystems  configchannel_updatefile
+configchannel_clone        configchannel_details      configchannel_filedetails  configchannel_list         configchannel_removefiles  configchannel_verifyfile&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+Configuration channels can hold any files, however by default there is a maximum file size that it is able to hold, this can be modified by setting the variables   maximum_config_file_size and web.maximum_config_file_size in /etc/rhn/rhn.conf. This will be required if you wish to store larger files such as file archives within spacewalk. 
+
+When creating files through the web interface it is possible to set the file ownership, permisons and SELinux conext, setting these correctly can save hours of headache in the future!
+&lt;/p&gt;
+
+&lt;h2 id=&quot;kickstart&quot;&gt; &lt;a&gt; KickStarts  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+
+&lt;/p&gt;
+
+&lt;h2 id=&quot;profiles&quot;&gt; &lt;a&gt; Package Profiles  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&quot;compare&quot;&gt; &lt;a&gt; Comparing Files  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&quot;res&quot;&gt; &lt;a&gt; Other Resources  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+</description>
+				<pubDate>Tue, 27 Jan 2015 00:00:00 +0000</pubDate>
+				<link>http://necurity.co.uk/netsec/2015/01/27/kickstart_config_tutorial.html</link>
+				<guid isPermaLink="true">http://necurity.co.uk/netsec/2015/01/27/kickstart_config_tutorial.html</guid>
+			</item>
+		
+			<item>
 				<title>Redhat Spacewalk Tutorial | Installation, RPM's, Kickstarts and Clients</title>
 				<description>&lt;div id=&quot;pagemenu&quot;&gt;
 &lt;ol&gt;
@@ -66,7 +127,7 @@ cat &amp;gt; /etc/yum.repos.d/jpackage-generic.repo &lt;span class=&quot;s&quot;
 &lt;span class=&quot;s&quot;&gt;gpgkey=http://www.jpackage.org/jpackage.asc&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;EOF&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# Install spacewalk - Postgress packages&lt;/span&gt;
-yum install spacewalk-setup-postgresql spacewalk-postgresql&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+yum install spacewalk-setup-postgresql spacewalk-postgresql spacecmd&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;
@@ -238,7 +299,7 @@ After this create the distribution though either the web interface (systems -&am
 &lt;/p&gt;
 
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;spacecmd -u admin -p &lt;span class=&quot;s2&quot;&gt;&amp;quot;pass&amp;quot;&lt;/span&gt; -- distribution_create -n centos6 -p /var/distro-trees/centos6-64/ -b centos6-x86_64 -t rhel_6&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;spacecmd -u admin -p &lt;span class=&quot;s2&quot;&gt;&amp;quot;pass&amp;quot;&lt;/span&gt; -- distribution_create -n centos6 -p /var/distro-trees/centos-6/ -b centos6-x86_64 -t rhel_6&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 
@@ -355,38 +416,6 @@ gem install jekyll_ext
 				<pubDate>Sun, 06 Jul 2014 00:00:00 +0000</pubDate>
 				<link>http://necurity.co.uk/linux/2014/07/06/2014-07-06-Cygwin_and_Jekyll.md.html</link>
 				<guid isPermaLink="true">http://necurity.co.uk/linux/2014/07/06/2014-07-06-Cygwin_and_Jekyll.md.html</guid>
-			</item>
-		
-			<item>
-				<title>Kickstarts and Configuration Management Tutorial</title>
-				<description>&lt;div id=&quot;pagemenu&quot;&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;#Summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Kickstarts&lt;/a&gt; &lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Profiles&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Configuration Files&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Comparing Files&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#&quot;&gt;Other Resources&lt;/a&gt; &lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-
-&lt;div id=&quot;pagesummary&quot;&gt;
-&lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
-&lt;p&gt;
-Spacewalk offers the ability to generate and deploy Kickstarts (standard builds) and also is able to keep a eye on packages that are installed on the system as well as compare any file that is on the remote machine to a local copy, giving IT management a overview of which if any systems do not meet a standard build requirement. In this tutorial I will go about first creating a Kickstart of a CentOS 6.4 Laptop, the generation of the standard profile and finally the creation, deployment and comparison of system files.
-&lt;/p&gt;&lt;p&gt;
-This is a continuation of the &lt;a href=&quot;/tag/tech/spacewalk&quot;&gt; Spacewalk series &lt;/a&gt;, more information such as the initial setup and configuration and other features is available from the tag index. The establishment of standards and baselines in a enterprise environment is a important step toward improving information security controls. It allows the assurance that all systems used within the business meet the minimum security requirements, while saving IT staff time on building and installing machines.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&quot;maincontent&quot;&gt;
-&lt;h2&gt; &lt;a&gt; KickStarts  &lt;/a&gt; &lt;/h2&gt;
-&lt;p&gt;
-&lt;/p&gt;
-&lt;/div&gt;
-</description>
-				<pubDate>Tue, 22 Oct 2013 00:00:00 +0000</pubDate>
-				<link>http://necurity.co.uk/netsec/2013/10/22/kickstart_config_tutorial.html</link>
-				<guid isPermaLink="true">http://necurity.co.uk/netsec/2013/10/22/kickstart_config_tutorial.html</guid>
 			</item>
 		
 	</channel>

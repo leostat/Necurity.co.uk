@@ -240,7 +240,7 @@ After this create the distribution though either the web interface (systems -> k
 </p>
 
 {% highlight bash %}
-spacecmd -u admin -p "pass" -- distribution_create -n centos6 -p /var/distro-trees/centos-6	/ -b centos6-x86_64 -t rhel_6
+spacecmd -u admin -p "pass" -- distribution_create -n centos6 -p /var/distro-trees/centos-6/ -b centos6-x86_64 -t rhel_6
 {% endhighlight %}
 
 
