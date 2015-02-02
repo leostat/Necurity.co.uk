@@ -39,27 +39,25 @@ configchannel_backup       configchannel_delete       configchannel_export      
 configchannel_clone        configchannel_details      configchannel_filedetails  configchannel_list         configchannel_removefiles  configchannel_verifyfile&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-Configuration channels can hold any files, however by default there is a maximum file size that it is able to hold, this can be modified by setting the variables   maximum_config_file_size and web.maximum_config_file_size in /etc/rhn/rhn.conf. This will be required if you wish to store larger files such as file archives within spacewalk. 
+Configuration channels can hold any files, however by default there is a maximum file size that it is able to hold, this can be modified by setting the variables   maximum_config_file_size and web.maximum_config_file_size in /etc/rhn/rhn.conf. This will be required if you wish to store larger files such as file archives within spacewalk. &lt;br /&gt;
 
-When creating files through the web interface it is possible to set the file ownership, permisons and SELinux conext, setting these correctly can save hours of headache in the future!
+When creating files through the web interface it is possible to set the file ownership, permissions and SELinux context, setting these correctly can save hours of headache in the future!.
+&lt;/p&gt;
+&lt;p&gt;
+Once you have uploaded all the files you wish to be managed by spacewalk you must assign your configuration channel to an activation key. You are able to have multiple configuration channels per activation key, if there are conflicting files within two configuration channels then the channel with the higher priority within the activation key will be used. If registering a system with multiple activation keys then the order of activation keys is used to decide the channel priority with the first activation key being used as the primary source of files, secondary key's configuration files will be deployed but will not overide any files managed from the first activation key.   
+&lt;/p&gt;
+&lt;p&gt;
+To use the configuration file deployment within activation keys the permission must be set within the key, this can be done by setting the Provisioning and Monitoring entitlements, followed by adding the configuration file permission. 
 &lt;/p&gt;
 
 &lt;h2 id=&quot;kickstart&quot;&gt; &lt;a&gt; KickStarts  &lt;/a&gt; &lt;/h2&gt;
 &lt;p&gt;
-
+Once adding all you configuration files to the channel, and assigning the channel to the activation key you are then able to move onto creating a kickstart to get a standard build process moving. In the web interface browse to Systems -&amp;gt; Kickstarts -&amp;gt; Profiles and click the create new kickstart. Follow the wizard choosing your settings, when setting the root password keep in mind that although it is stored in a hashed format, it is publicly available to anyone who has access to the spacewalk server, so setting a strong but deault password is recommend.
 &lt;/p&gt;
-
-&lt;h2 id=&quot;profiles&quot;&gt; &lt;a&gt; Package Profiles  &lt;/a&gt; &lt;/h2&gt;
 &lt;p&gt;
+Under the Details tab, check the logging options and preserve ks.cfg to save a log to the booted server for future reference. Go through selecting all te options you want, such as enabling configuration management, selecting activation keys and adding Pre / post scripts. And thats all there really is to kickstarts!
 &lt;/p&gt;
 
-&lt;h2 id=&quot;compare&quot;&gt; &lt;a&gt; Comparing Files  &lt;/a&gt; &lt;/h2&gt;
-&lt;p&gt;
-&lt;/p&gt;
-
-&lt;h2 id=&quot;res&quot;&gt; &lt;a&gt; Other Resources  &lt;/a&gt; &lt;/h2&gt;
-&lt;p&gt;
-&lt;/p&gt;
 &lt;/div&gt;
 </description>
 				<pubDate>Tue, 27 Jan 2015 00:00:00 +0000</pubDate>
