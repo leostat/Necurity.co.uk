@@ -20,18 +20,6 @@ title: Useful Links
 {% endfor %}
 </ul>
 </div>
-		<div class=subl>
-<h3>Tags in Personal Blogs</h3> <hr />
-   {% pers_tag %}
-</div>
-		<div class=subl>
-<h3>Archive for Personal</h3> <hr />
-<ul>
-{% for monthly_archive in site.monthly_archives reversed %}
-<li> <a href="/archive/pers{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> </li>
-{% endfor %}
-</ul>
-</div>
 </div>
   
 	<div class="content clearfix">

@@ -266,6 +266,25 @@ list-style:none;
 	width:235px;
 }
 
+
+.g1{
+	width: 49%;
+	float: left;
+    border: 1px solid #D4D4D4;
+    border-radius: 20px 20px 20px 20px;
+	margin-top:10px;
+	margin-bottom: 10px;
+}
+
+.g2{
+	width: 49%;
+	float: right;
+    border: 1px solid #D4D4D4;
+    border-radius: 20px 20px 20px 20px;
+	margin-top:10px;
+	margin-bottom: 10px;
+}
+
 .main {
 padding-top:65px;
 width:1280px;
@@ -374,7 +393,7 @@ html {
 
 
 /* ==========================================================================
- * 	Support small screens - ie sub 1280
+ * 	Support small screens 
  * 	   ========================================================================== */
 
 @media only screen and (max-width: 1020px) {
@@ -521,6 +540,8 @@ nav ul li {
 float:none;
 width:95%;
 }
+
+
 }
 
 
