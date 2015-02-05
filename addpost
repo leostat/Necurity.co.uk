@@ -27,7 +27,7 @@ done
 #Ahem no spaces on the web please
 sane=`echo "$title" | sed s/" "/"_"/g`
 
-post=`date +%Y-%m-%d`-$sane.md
+post=`date +%Y-%m-%d`-$sane
 
 if [ -f ./$blog/_drafts/$post ]
   then
