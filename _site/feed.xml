@@ -7,6 +7,182 @@
 		<atom:link href="http://necurity.co.uk/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Studying for and taking the CREST CPSA Exam</title>
+				<description>&lt;div id=&quot;pagemenu&quot;&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;#Summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#whatsit&quot;&gt; What is the CPSA Exam? &lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#tech&quot;&gt; A Look at the technical Syllabus&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#tips&quot;&gt; Generic exam tips and tricks &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#reading&quot;&gt; Further Reading | Other Resources |Revision notes&lt;/a&gt; &lt;/li&gt;
+
+&lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;pagesummary&quot;&gt;
+&lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+I Have recently studied for and passed the CREST CPSA Exam, I though I would share some thoughts and my Pre-Exam revision Notes to help other people thinking of taking this new exam from crest as when looked I could not find much about it!
+&lt;/p&gt;
+&lt;p&gt;
+First things first though is I would like to highlight that the CPSA exam is under both the &lt;a href=&quot;http://www.crest-approved.org/wp-content/uploads/1401-Code-of-Conduct-Individual-v4.0.pdf&quot;&gt; Code of Ethics &lt;/a&gt;, and has a NDA over it. This post is NOT about the actual content of the exam. It is merely my experience with the examination process, and the Technical syllabus. A copy of the notes for candidates covering the exam type, question examples and such is available from &lt;a href=&quot;http://www.crest-approved.org/wp-content/uploads/crest-notes-for-candidates-CPSA.pdf&quot;&gt; here &lt;/a&gt; and the technical syllabus is available &lt;a href=&quot;http://www.crest-approved.org/wp-content/uploads/Technical_Syllabus-CREST_Practitioner-v1-1.pdf&quot;&gt; here&lt;/a&gt;. Please check the &lt;a href=&quot;http://www.crest-approved.org/professional-examinations/practitioner-security-analyst/index.html&quot;&gt; CPSA Page &lt;/a&gt; on the crest website for the most upto date version of the notes for candidates and the Technical Syllabus. If anything on this page is deemed against the Code of Ethics or the Non Disclosure agreement or section 1.2 of the notes for candidates then please contact me and so we can discuss what needs removing. As of the 23rd of March no content has been removed.
+&lt;/p&gt;
+
+&lt;p&gt;
+A quick TL;DR for this is that personally I found the exam syllabus interesting and a good intro into the CREST way of doing exams. The hard part of this exam for me was the time management for the 240 questions in the time allocated!. I found it less focused on Exploiting, more focused on Finding.
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;maincontent&quot;&gt;
+&lt;h2 id=&quot;whatsit&quot;&gt; &lt;a&gt; What is the CPSA Exam?  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+So what is the CPSA And who should take it? The Crest Certified practitioner security analyst is the minimum required exam for being a crest team member. It sits beneath the CRT exam and looks at your core concepts of Information Security, Networking and System Administration. Focused less around further exploitation and more around being able to locate some pretty basic common security issues such as SQL injection. If you have any background in Info Sec (such as a degree, previous work experience, or just a working interest) you shouldn't find the exam too hard to get through. Its aimed at people starting in the infosec industry, so if you have already been working as a tester for a while you may want to skip straight to the CRT exam. 
+&lt;/p&gt;
+
+
+&lt;h2 id=&quot;tech&quot;&gt; &lt;a&gt; A Look at the Technical Syllabus  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Crest exams give you the required information different from some of the other ones out there, rather than giving you a set resource list and reference material they give you a syllabus to follow and that's about it. The syllabus has 6 sections for the CPSA as quickly outlined below. Theres quite a lot of cross over between this, CISSP, OSCP and CCNA so if you have done any of those before then you will find this quite easy.
+&lt;/p&gt;
+
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+Core Networking
+&lt;/td&gt;
+
+&lt;td&gt;
+This section covers your basic networking and network services, Do you know your IP address from your MAC address, how routing and networking works, Which IP address are non routable? You should be familiar with this section if you have worked with networks before and you should be relatively OK here.
+&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;
+Security Architecture and Design
+&lt;/td&gt;
+
+&lt;td&gt;
+Covering some of the more common topics around security. Firewalls, Encryption and Architecture should be second nature for any tester. You also need to be familiar with problems with BYOD and you also need to be aware of the Laws of England and how they impact your job as a tester. 
+&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;
+Windows systems
+&lt;/td&gt;
+
+&lt;td&gt;
+The most common operating system you will encounter everyday, knowing which version of windows server shipped with what version of IIS and kernel can be useful from time to time when nmap or nessus cant make up its mind what OS your target is. Knowing how windows works, How and what the different functions of AD do and what the most common weaknesses you will encounter are. Also knowing how to harden and fix the problems you find.
+&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;
+Unix Systems
+&lt;/td&gt;
+
+&lt;td&gt;
+Although they usually number less in work environment you can do much much more with a Linux server. Being familiar with both RPM based and DEB based systems is a must.
+&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;
+Penetration testing
+&lt;/td&gt;
+
+&lt;td&gt;
+The more fun topic for most people. This is at a basic level though and is more aimed at do you know the most common web-app problems, when you see id= what do you instantly think? 
+&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;
+Incident response and analysis
+&lt;/td&gt;
+
+&lt;td&gt;
+Dont let the title fool you, this is about reading logs, PCAPS and knowing how to use strings and hexdump. 
+&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;/table&gt;
+
+&lt;p&gt;
+It can look a bit daunting if you don't recognise everything on there, but it doesn't take that long to read up on everything. Around a month would be plenty of time to get comfortable with it, depending on how long you spend reading and how much you already know of course. Don't get bogged down in knowing everything around every topic either, remember this is a higher level exam then the CRT, for example you need to know how to find a SQL injection, how to use it, and what maybe a tool you could use to exploit it further, and on the windows side you may need to know what the different versions of IIS Microsoft launched along with what platforms along with the major security changes, but not all the nitty gritty details about how IIS works.
+&lt;/p&gt;
+
+&lt;h2 id=&quot;tips&quot;&gt; &lt;a&gt; Generic Exam Tips and Tricks  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+CPSA is a open book exam, don't be afraid to take in your condensed revision notes or a book or two. Although its open book time is very tight so you wont want to be having to look through pages and pages of notes and a few books so only take in things that you will need! Going into the exam make sure that your laptop is set up how you use it every day. The laptop gets wiped at the end of the exam (make sure you can take the drive out!) so it may be tempting to just stick something like Kali or the fedora security spin on there and be done with it, but keep in mind that this may not have all the tools on or set up and ready to use.&lt;/p&gt;
+
+&lt;p&gt; The CPSA page suggests some of the books to read before the exam, and there is one on their list I like to keep around for quick reference and that is the Red Team Field Manual &lt;a href=&quot;http://www.amazon.co.uk/Rtfm-Red-Team-Field-Manual/dp/1494295504&quot;&gt;RTFM&lt;/a&gt;), over time working as a tester you will probably write your own version of this anyway, but its a great starting point covering some common tools, networking, generic Windows / Linux &quot;stuff&quot;, and a couple of common old CVE's that you may still see on engagements. &lt;/p&gt;
+
+&lt;p&gt;Keep an eye on your time in the exam, Crest recommend up to a hour on the questions then the rest of the time on the practical exercise, how you use your time is up to you but keep in mind the practical is over double the size of the questions as its not just recall of which answer is correct. Dont spend too long on questions, if you dont know an answer mark it with a star, colour, flag or whatever and come back to it on your second pass of the paper, if you still dont know it is take a educated guess, there is no negative marking so apply your brain and pick what looks right. &lt;/p&gt;
+
+&lt;p&gt;With the practical make you have all the information gathering done at the beginning as you don't want to get halfway through and realise you have not got a clue where the web servers are! Also dont be afraid to ask your examiner questions if something seems &quot;wrong&quot;, for example if a service your meant to be querying is being super super slow or not replying at all, ask, your heavy handed scanning at the begging may have made the service slow or unresponsive. &lt;/p&gt;
+
+&lt;p&gt;
+And lastly Keep Calm don't panic, its easy really! And once you've finished start revising for the CRT ;) 
+&lt;/p&gt;
+
+&lt;h2 id=&quot;reading&quot;&gt; &lt;a&gt; Further Reading | Other Resources | Revision Notes  &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+One of the ways I personally study for exams is I keep a note of headings of everything I need to know. This allows for quick reference in the exam (its open book after all) and an insight into what I need to know. I have attached my KeepNote notebook to this page in case anybody finds it useful. This is following the 1.0 syllabus ONLY, it has not been modified with anything taken from the exam paper itself. You will notice if you open it that it is not indexed, lots of spelling mistakes and most likely repeated content, its just how I keep my notes! These are coming soon tm after I get rid of the majority of spelling mistakes and any references to internal stuff.
+&lt;/p&gt;
+&lt;p&gt;
+There are also some other super useful resources I found to help my revising. I have linked to them below with a quick explanation of why I found it useful. 
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt; Resource &lt;/td&gt;
+&lt;td&gt; Whats it good for? &lt;/td&gt;
+&lt;tr&gt;
+&lt;td&gt; Wikipedia pages &lt;/td&gt;
+&lt;td&gt; Wiki'ing the topic in question is the quickest way to learn about it. Wikipedia has loads of well written tech pages to read through and digest &lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt; &lt;a href=&quot;http://www.ucs.cam.ac.uk/support/windows-support/winsuptech&quot;&gt;Cambridge AD Information&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt; Cambridge University publishes information about setting up and managing windows domains. Although this is aimed at the university systems the information is generic and helped me wrap my brain around Windows Domains&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;
+&lt;a href=&quot;http://pwndizzle.blogspot.co.uk/2014/12/crest-crt-exam-preparation.html&quot;&gt; Other peoples Blogs&lt;/a&gt;
+&lt;/td&gt;
+
+&lt;td&gt; Other people that have taken the Crest exams usualy blog about it, some people make useful snippet guides so have a Google and see what you can find.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;
+&lt;a href=&quot;https://technet.microsoft.com/en-gb/&quot;&gt;Technet &lt;/a&gt;&lt;/td&gt;
+&lt;td&gt; If you ever need more information around windows systems technet will have have the answers for you&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt; &lt;a href=&quot;https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project&quot;&gt; OWASP
+&lt;td&gt; The Open Web Application Security Project covers as the name says common web app problems. Knowing the top ten is always good to know, and the testing guide has a wealth of information to absorb&lt;/td&gt;
+
+&lt;tr&gt;
+&lt;td&gt; &lt;a href=&quot;http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-857-network-and-computer-security-spring-2014/&quot;&gt;MIT Open Courseware &lt;/a&gt;&lt;/td&gt;
+&lt;td&gt; MIT recently open sourced their CS undergrad course. I highly recommend at least watching the youtube series, its great for the unix security part of cpsa 
+
+&lt;tr&gt;
+&lt;td&gt; &lt;a href=&quot;http://www.noexcuselist.com/&quot;&gt; Other course materials &lt;/a&gt;  &lt;/td&gt; 
+&lt;td&gt; MIT isnt alone in opening up learning materials many other universities  do the same!&lt;/td&gt;
+&lt;tr&gt;
+
+
+
+&lt;/tr&gt;&lt;/tr&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;&lt;/div&gt;
+</description>
+				<pubDate>Fri, 13 Mar 2015 00:00:00 +0000</pubDate>
+				<link>http://necurity.co.uk/netsec/2015/03/13/crest_cpsa_exam.html</link>
+				<guid isPermaLink="true">http://necurity.co.uk/netsec/2015/03/13/crest_cpsa_exam.html</guid>
+			</item>
+		
+			<item>
 				<title>Redhat Spacewalk Tutorial | Kickstarts and Configuration Management</title>
 				<description>&lt;div id=&quot;pagemenu&quot;&gt;
 &lt;ol&gt;
