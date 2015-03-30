@@ -7,6 +7,234 @@
 		<atom:link href="http://necurity.co.uk/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Fun With American Fuzzy Lop - A quick tutorial</title>
+				<description>&lt;div id=&quot;pagemenu&quot;&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;#Summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Install&quot;&gt;Installing and linking your target&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Crashing&quot;&gt;Making Test Cases and Fuzzing &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Exploring&quot;&gt;Exploring Crashes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#Reading&quot;&gt;Further Reading&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;pagesummary&quot;&gt;
+&lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+I have recently been playing with AFL by Lcamtuf, a high performance fuzzer that is exceedingly efficient at finding problems in code when you either have or dont have the source code.
+&lt;/p&gt;
+&lt;p&gt;
+The most efficient way to use AFL is to recompile your target application using the modified version of GCC, this allows AFL to pick up on hangs and crashes. I wanted to write a little piece on using the fuzzer from installing, choosing test cases, finding a crash in a application to following it through to see if we can do anything &quot;Evil&quot; with it. I chose to have a look at LibreSSL as the codebase is huge and it has multiple places where complex user input is used. AFL has been used to fuz many many projects already, so dont be surprised if you find a crash it may have already been reported! To fuzz a project you need test cases, in this post the test cases will be a Public Certificate, a Certificate Signing Request and a Private Key. 
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;maincontent&quot;&gt;
+&lt;h2 id=&quot;Install&quot;&gt; &lt;a&gt; Installing and linking your target &lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+AFL is available pre-compiled on Arch, but anything else all you have to do is grab the source, this is easy enough so we grab it and compile.
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
+tar -xvf 
+wget http://lcamtuf.coredump.cx/afl/releases/af
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;afl*
+make
+&lt;span class=&quot;c&quot;&gt;# If you want to move the executables to your path you can also do make install&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# make install;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/p&gt;
+&lt;p&gt;
+After this you need to chose something to fuzz. In this mini guide I chose LibreSSL as why not, I was curious on if AFL would be able to create a valid cert that validates in some &quot;weird&quot; way, it also gives lots of mangled SSL certs to throw at Internet Explorer. So lets grab the source and compile it. When installing we change the install DIR as we don't want the rebuilt package effecting the local systems OpenSSL.
+&lt;/p&gt;
+&lt;p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;wget http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.1.6.tar.gz
+tar -xvf libressl-2.1.6.tar.gz
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;libressl-2.1.6/
+&lt;span class=&quot;nv&quot;&gt;CC&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/afl/afl-1.57b/afl-gcc ./configure
+make check
+mkdir /root/testing
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DESTDIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/testing/
+make install&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+	
+&lt;/p&gt;
+&lt;h2 id=&quot;Crashing&quot;&gt; &lt;a&gt; Making Test Cases and Fuzzing &lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;
+Now you have it compiled you need to create some test cases to run against LibreSSL. Here we create a Public certificate, Private Key, and Certificate request, and as by suggestion of the &lt;a href=&quot;http://lcamtuf.coredump.cx/afl/README.txt&quot;&gt; Readme&lt;/a&gt; we keep the size of them to a minimum. After generating these we feed them into afl and see what it finds. We move each of the user generated files into a in folder for afl to process, and also create a out folder for afl to place its findings. The -- specifies bash to stop processing command flags and the @@ is afl's placeholder where it inserts the test cases. If all goes well AFL will spin up and start churning out other test cases to run through. Before we are able to start AFL we need to export the LD_LIBRARY_PATH environment variable so that LibreSSL uses the compiled library rather than the system ones
+&lt;/p&gt;
+&lt;p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LD_LIBRARY_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;/root/testing/usr/local/lib&amp;quot;&lt;/span&gt;
+/root/testing/usr/local/bin/openssl req -x509 -nodes -days &lt;span class=&quot;m&quot;&gt;365&lt;/span&gt; -newkey rsa:512 -keyout privateKey.key -out certificate.crt -out CSR.csr
+screen
+mkdir incrt inkey incsr outcrt outkey outcsr
+~/afl/afl-1.57b/afl-fuzz -i inkey -o outkey -- /root/testing/usr/local/bin/openssl x509 -in @@ -text -noout
+~/afl/afl-1.57b/afl-fuzz -i incsr -o outcsr -- /root/testing/usr/local/bin/openssl x509 -in @@ -text -noout
+~/afl/afl-1.57b/afl-fuzz -i incrt -o outcrt -- /root/testing/usr/local/bin/openssl x509 -in @@ -text -noout&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/p&gt;
+
+&lt;p&gt; Then after a while your hoping for some crashes, the files will be stored in the out directory we specified before.  &lt;/p&gt;
+&lt;h2 id=&quot;Exploring&quot;&gt; &lt;a&gt; Exploring Crashes &lt;/a&gt;&lt;/h2&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;~/afl/afl-1.57b/afl-fuzz -i incrash -o outcrash -- /root/testing/usr/local/bin/openssl x509 -in @@ -text -noout
+                       american fuzzy lop 1.57b &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;openssl&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+┌─ process timing ─────────────────────────────────────┬─ overall results ─────┐
+│        run &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt; : &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;27&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;38&lt;/span&gt; sec      │  cycles &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt; : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;      │
+│   last new path : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;15&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;11&lt;/span&gt; sec      │  total paths : &lt;span class=&quot;m&quot;&gt;1830&lt;/span&gt;   │
+│ last uniq crash : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;18&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;41&lt;/span&gt; sec      │ uniq crashes : &lt;span class=&quot;m&quot;&gt;108&lt;/span&gt;    │
+│  last uniq hang : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;54&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;39&lt;/span&gt; sec      │   uniq hangs : &lt;span class=&quot;m&quot;&gt;18&lt;/span&gt;     │
+├─ cycle progress ────────────────────┬─ map coverage ─┴───────────────────────┤
+│  now processing : &lt;span class=&quot;m&quot;&gt;1708&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;93.33%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     │    map density : &lt;span class=&quot;m&quot;&gt;5453&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;8.32%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;          │
+│ paths timed out : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;         │ count coverage : 3.07 bits/tuple       │
+├─ stage progress ────────────────────┼─ findings in depth ────────────────────┤
+│  now trying : bitflip 1/1           │ favored paths : &lt;span class=&quot;m&quot;&gt;318&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;17.38%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;           │
+│ stage execs : 854/4176 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;20.45%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     │  new edges on : &lt;span class=&quot;m&quot;&gt;511&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;27.92%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;           │
+│ total execs : 40.1M                 │ total crashes : 71.0k &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;108&lt;/span&gt; unique&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     │
+│  &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;speed : 138.9/sec             │   total hangs : &lt;span class=&quot;m&quot;&gt;249&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;18&lt;/span&gt; unique&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        │
+├─ fuzzing strategy yields ───────────┴───────────────┬─ path geometry ────────┤
+│   bit flips : 714/1.41M, 100/1.41M, 100/1.41M       │    levels : &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;          │
+│  byte flips : 2/175k, 8/170k, 4/172k                │   pending : &lt;span class=&quot;m&quot;&gt;1424&lt;/span&gt;       │
+│ arithmetics : 312/9.30M, 2/247k, 0/14.1k            │  pend fav : &lt;span class=&quot;m&quot;&gt;41&lt;/span&gt;         │
+│  known ints : 14/1.08M, 2/6.31M, 10/8.60M           │ own finds : &lt;span class=&quot;m&quot;&gt;1829&lt;/span&gt;       │
+│  dictionary : 0/0, 0/0, 174/4.97M                   │  imported : n/a        │
+│       havoc : 439/4.70M, 0/0                        │  variable : &lt;span class=&quot;m&quot;&gt;1023&lt;/span&gt;       │
+│        trim : 12.33%/86.6k, 3.65%                   ├────────────────────────┘
+└─────────────────────────────────────────────────────┘             &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cpu: 76%&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@fw ~&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# ls /root/testing/usr/local/outkey/crashes/&lt;/span&gt;
+id:000000,sig:11,src:000000,op:flip1,pos:32           id:000028,sig:11,src:000065,op:flip1,pos:59            id:000056,sig:11,src:000748,op:flip2,pos:82            id:000084,sig:11,src:001255,op:flip1,pos:57
+id:000001,sig:11,src:000000,op:flip1,pos:58           id:000029,sig:11,src:000065,op:flip1,pos:59            id:000057,sig:11,src:000748,op:flip2,pos:470           id:000085,sig:11,src:001255,op:flip1,pos:61&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;
+After we have a crash we need to generate other test cases around this crash, this allows us to see if we have any control over registers. (Really at this point we should chuck it through GDB to see what the crash is but i'm skipping this till later). It just happens that most of these are all the same crash after analysis so copy any across on to the folder then to start the fuzzing we pass the -C flag on afl. What this does is keep the program in a crashing state while creating other test cases with cause a similar crash. We create new folders and start the fuzzing again. 
+&lt;/p&gt;
+
+&lt;p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;peruvian were-rabbit 1.57b &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;openssl&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+┌─ process timing ─────────────────────────────────────┬─ overall results ─────┐
+│        run &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt; : &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;20&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;10&lt;/span&gt; sec      │  cycles &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt; : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;      │
+│   last new path : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;13&lt;/span&gt; sec       │  total paths : &lt;span class=&quot;m&quot;&gt;564&lt;/span&gt;    │
+│ last uniq crash : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;35&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; sec       │ uniq crashes : &lt;span class=&quot;m&quot;&gt;235&lt;/span&gt;    │
+│  last uniq hang : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; days, &lt;span class=&quot;m&quot;&gt;20&lt;/span&gt; hrs, &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt; min, &lt;span class=&quot;m&quot;&gt;36&lt;/span&gt; sec     │   uniq hangs : &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;      │
+├─ cycle progress ────────────────────┬─ map coverage ─┴───────────────────────┤
+│  now processing : &lt;span class=&quot;m&quot;&gt;559&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;99.11%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;      │    map density : &lt;span class=&quot;m&quot;&gt;2190&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.34%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;          │
+│ paths timed out : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;         │ count coverage : 1.63 bits/tuple       │
+├─ stage progress ────────────────────┼─ findings in depth ────────────────────┤
+│  now trying : havoc                 │ favored paths : &lt;span class=&quot;m&quot;&gt;145&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;25.71%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;           │
+│ stage execs : 16.0k/30.0k &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;53.21%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  │  new edges on : &lt;span class=&quot;m&quot;&gt;228&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40.43%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;           │
+│ total execs : 28.1M                 │   new crashes : 7.59M &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;235&lt;/span&gt; unique&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     │
+│  &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;speed : 155.4/sec             │   total hangs : &lt;span class=&quot;m&quot;&gt;373&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;5&lt;/span&gt; unique&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;         │
+├─ fuzzing strategy yields ───────────┴───────────────┬─ path geometry ────────┤
+│   bit flips : 169/938k, 41/938k, 41/938k            │    levels : &lt;span class=&quot;m&quot;&gt;15&lt;/span&gt;         │
+│  byte flips : 0/117k, 11/114k, 19/115k              │   pending : &lt;span class=&quot;m&quot;&gt;300&lt;/span&gt;        │
+│ arithmetics : 94/6.19M, 0/178k, 0/3083              │  pend fav : &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;          │
+│  known ints : 20/715k, 7/4.22M, 18/5.79M            │ own finds : &lt;span class=&quot;m&quot;&gt;563&lt;/span&gt;        │
+│  dictionary : 0/0, 0/0, 53/897k                     │  imported : n/a        │
+│       havoc : 318/6.87M, 0/0                        │  variable : &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;          │
+│        trim : 2.49%/56.1k, 3.84%                    ├────────────────────────┘
+└─────────────────────────────────────────────────────┘             &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cpu: 78%&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/p&gt;
+
+&lt;p&gt;
+Once we have left it generating test cases for a while we can chuck them through GDB to get more information about the crash. 
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LD_LIBRARY_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;./lib&amp;quot;&lt;/span&gt;
+gdb ./bin/openssl
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;args rsa -in &lt;span class=&quot;s2&quot;&gt;&amp;quot;./crashout/crashes/id:000049,sig:11,src:000000,op:havoc,rep:2&amp;quot;&lt;/span&gt; -check
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; r
+Starting program: /root/testing/usr/local/bin/openssl rsa -in &lt;span class=&quot;s2&quot;&gt;&amp;quot;./crashout/crashes/id:000049,sig:11,src:000000,op:havoc,rep:2&amp;quot;&lt;/span&gt; -check
+Missing separate debuginfos, use: debuginfo-install glibc-2.20-8.fc21.x86_64
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00007ffff74b4117 in pkey_cb &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;pval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x7fffffffd938, &lt;span class=&quot;nv&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;optimized out&amp;gt;, &lt;span class=&quot;nv&quot;&gt;exarg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at asn1/p8_pkey.c:71
+&lt;span class=&quot;m&quot;&gt;71&lt;/span&gt;                      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;key-&amp;gt;pkey-&amp;gt;value.octet_string&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gdb&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; i r
+rax            0x74a8c0 7645376
+rbx            0x7ffff7ab4e40   140737348587072
+rcx            0x0      0
+rdx            0x0      0
+rsi            0x7fffffffd938   140737488345400
+rdi            0x2      2
+rbp            0x7fffffffd938   0x7fffffffd938
+rsp            0x7fffffffd838   0x7fffffffd838
+r8             0x74a610 7644688
+r9             0xfffffffffffffffc       -4
+r10            0x748bb0 7637936
+r11            0xd000000        218103808
+r12            0x7ffff74b4050   140737342292048
+r13            0x2      2
+r14            0x2      2
+r15            0x7ffff7ac6410   140737348658192
+rip            0x7ffff74b4117   0x7ffff74b4117 &amp;lt;pkey_cb+199&amp;gt;
+eflags         0x10246  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; PF ZF IF RF &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+cs             0x33     51
+ss             0x2b     43
+ds             0x0      0
+es             0x0      0
+fs             0x0      0
+gs             0x0      0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt; After throwing a few test cases through GDB we can see that we dont have control over any registers (Boo) so there isnt much evil to be done here. Still crashes are worth reporting. In this case the bug had already been reported &lt;a href=&quot;&quot;&gt;Here&lt;/a&gt;, Oh well!&lt;/p&gt;
+
+
+&lt;p&gt;
+As a little amusing side fact I found another blog with a similar piece and very similar title while writing this one, I guess great minds  &lt;a href=&quot;http://0x90909090.blogspot.co.uk/2015/01/lets-have-some-fun-with-afl.html&quot;&gt; think alike&lt;/a&gt;. 
+&lt;/p&gt;
+&lt;/div&gt;
+</description>
+				<pubDate>Mon, 30 Mar 2015 00:00:00 +0000</pubDate>
+				<link>http://necurity.co.uk/netsec/2015/03/30/Fun-With-AFL.html</link>
+				<guid isPermaLink="true">http://necurity.co.uk/netsec/2015/03/30/Fun-With-AFL.html</guid>
+			</item>
+		
+			<item>
+				<title>Connection Refeused with Hydra against TLS</title>
+				<description>&lt;div id=&quot;pagesummary&quot;&gt;
+&lt;h2 id=&quot;Summary&quot;&gt; &lt;a&gt;Summary &lt;/a&gt; &lt;/h2&gt;
+&lt;p&gt;
+Just a super quick one today. During a test I noticed some strange behaviour with the standard Hydra which ships with Kali (Version 8.1) when scanning sites with no SSLv3 support.
+&lt;/p&gt;
+&lt;p&gt;
+So if you see something along the lines of this
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;root@kali:~# hydra -s &lt;span class=&quot;m&quot;&gt;443&lt;/span&gt; -S -l admin -p adminpass necurity.co.uk  https-post-form  &lt;span class=&quot;s2&quot;&gt;&amp;quot;/php/a:user=^USER^&amp;amp;pass=^PASS^:DENIED&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;VERBOSE&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Could not create an SSL session: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
+&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; of &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; target completed, &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; valid passwords found
+Hydra &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://www.thc.org/thc-hydra&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; finished at 2015-03-24 21:52:57&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+Then grab the latest version from git and enjoy breaking in once more
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;root@kali:~/git# git clone git@github.com:vanhauser-thc/thc-hydra.git
+root@kali:~/git# &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;thc-hydra/
+root@kali:~/git/thc-hydra# ./configure 
+
+root@kali:~/git/thc-hydra# ./hydra -s &lt;span class=&quot;m&quot;&gt;443&lt;/span&gt; -S -l admin -p adminpass necurity.co.uk  https-post-form  &lt;span class=&quot;s2&quot;&gt;&amp;quot;/php/a:user=^USER^&amp;amp;pass=^PASS^:DENIED&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;443&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;http-post-form&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; host: necurity.co.uk   login: admin   password: adminpass
+&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; of &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; target successfully completed, &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; valid password found
+Hydra &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://www.thc.org/thc-hydra&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; finished at 2015-03-24 21:57:29&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/p&gt;
+
+&lt;p&gt;
+So why is this? Its because by default hydra used to just use a SSLv3 hello no matter what as thats what everyone supported, but since SSLv3 has been depreciated and has found itself in the sights of PCI you will find more and more sites turning SSLv3 off. You may encounter this in other tools as well, most of the time they just need rebuilding or a extra flag adding. As a side bug once you try and fail to use sslv3 on one of these servers Hydra will skitz out and start flooding the target with requests, OOPS!
+&lt;/p&gt;
+&lt;/div&gt;
+</description>
+				<pubDate>Tue, 24 Mar 2015 00:00:00 +0000</pubDate>
+				<link>http://necurity.co.uk/netsec/2015/03/24/Hydra-Vs-TLS.html</link>
+				<guid isPermaLink="true">http://necurity.co.uk/netsec/2015/03/24/Hydra-Vs-TLS.html</guid>
+			</item>
+		
+			<item>
 				<title>Studying for and taking the CREST CPSA Exam</title>
 				<description>&lt;div id=&quot;pagemenu&quot;&gt;
 &lt;ol&gt;
