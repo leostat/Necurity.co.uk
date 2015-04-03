@@ -1,3 +1,4 @@
+
 ---
 layout: post
 title: Studying for and taking the CREST CPSA Exam
@@ -25,7 +26,7 @@ published: true
 {{page.summary}}
 </p>
 <p>
-First things first though is I would like to highlight that the CPSA exam is under both the <a href="http://www.crest-approved.org/wp-content/uploads/1401-Code-of-Conduct-Individual-v4.0.pdf"> Code of Ethics </a>, and has a NDA over it. This post is NOT about the actual content of the exam. It is merely my experience with the examination process, and the Technical syllabus. A copy of the notes for candidates covering the exam type, question examples and such is available from <a href="http://www.crest-approved.org/wp-content/uploads/crest-notes-for-candidates-CPSA.pdf"> here </a> and the technical syllabus is available <a href="http://www.crest-approved.org/wp-content/uploads/Technical_Syllabus-CREST_Practitioner-v1-1.pdf"> here</a>. Please check the <a href="http://www.crest-approved.org/professional-examinations/practitioner-security-analyst/index.html"> CPSA Page </a> on the crest website for the most upto date version of the notes for candidates and the Technical Syllabus. If anything on this page is deemed against the Code of Ethics or the Non Disclosure agreement or section 1.2 of the notes for candidates then please contact me and so we can discuss what needs removing. As of the 23rd of March no content has been removed.
+First things first though is I would like to highlight that the CPSA exam is under both the <a href="http://www.crest-approved.org/wp-content/uploads/1401-Code-of-Conduct-Individual-v4.0.pdf"> Code of Ethics </a>, and has a NDA over it. This post is NOT about the actual content of the exam. It is merely my experience with the examination process, and the Technical syllabus. A copy of the notes for candidates covering the exam type, question examples and such is available from <a href="http://www.crest-approved.org/wp-content/uploads/crest-notes-for-candidates-CPSA.pdf"> here </a> and the technical syllabus is available <a href="http://www.crest-approved.org/wp-content/uploads/Technical_Syllabus-CREST_Practitioner-v1-1.pdf"> here</a>. Please check the <a href="http://www.crest-approved.org/professional-examinations/practitioner-security-analyst/index.html"> CPSA Page </a> on the crest website for the most upto date version of the notes for candidates and the Technical Syllabus. If anything on this page is deemed against the Code of Ethics or the Non Disclosure agreement or section 1.2 of the notes for candidates then please contact me and so we can discuss what needs removing. As of the 03rd of April no content has been removed.
 </p>
 
 <p>
@@ -52,7 +53,7 @@ Core Networking
 </td>
 
 <td>
-This section covers your basic networking and network services, Do you know your IP address from your MAC address, how routing and networking works, Which IP address are non routable? You should be familiar with this section if you have worked with networks before and you should be relatively OK here.
+This section covers your basic networking and network services, Do you know your IP address from your MAC address, how routing and networking works, Which IP address are non routable? You should be familiar with this section if you have worked with networks before and you should be relatively OK here. RTFM has a nice network lookup table, and ipcalc is your friend for getting a broadcast and network address.
 </td>
 </tr>
 
@@ -72,7 +73,7 @@ Windows systems
 </td>
 
 <td>
-The most common operating system you will encounter everyday, knowing which version of windows server shipped with what version of IIS and kernel can be useful from time to time when nmap or nessus cant make up its mind what OS your target is. Knowing how windows works, How and what the different functions of AD do and what the most common weaknesses you will encounter are. Also knowing how to harden and fix the problems you find.
+The most common operating system you will encounter everyday, knowing which version of windows server shipped with what version of IIS and kernel can be useful from time to time when nmap or nessus cant make up its mind what OS your target is, and knowing what OS windows no longer supports is also good to know. Knowing how windows works, How and what the different functions of AD do and what the most common weaknesses you will encounter are. Also knowing how to harden and fix the problems you find is good to know. Knowing what SID's and RID's are, knowing how file permissions and ACL's work, and knowing about the SMB/CIFS protocol is also a must, and whats a Null session in this context?. Do you know what the difference between LM and NTLM is? And where does kerberos fit into windows authentication?
 </td>
 </tr>
 
@@ -82,7 +83,7 @@ Unix Systems
 </td>
 
 <td>
-Although they usually number less in work environment you can do much much more with a Linux server. Being familiar with both RPM based and DEB based systems is a must.
+Although they usually number less in work environment you can do much much more with a Linux server. Being familiar with both RPM based and DEB based systems is a must. Again knowing how UID's and GID's are used, how file percussions work and are controlled ( do you know your chmod from chown). Knowing about NFS, X and GUID and SUID bits are, difference between SSH and Rlogin and Telnet, and all the problems among with all the problems with these services. If you have ever managed Linux servers you should be good to go with this section. 
 </td>
 </tr>
 
@@ -92,7 +93,7 @@ Penetration testing
 </td>
 
 <td>
-The more fun topic for most people. This is at a basic level though and is more aimed at do you know the most common web-app problems, when you see id= what do you instantly think? 
+The more fun topic for most people. This is at a basic level though and is more aimed at do you know the most common web-app problems, when you see id= what do you instantly think? Do you know the characters that commonly trigger XSS, Sql Injection and command injection?. Do you know how to sweep systesm with nmap, query information from database servers, brute force both http simple and http form authentication, brute SNMP and get information from it. How can you find content on web servers, and how do you get valid users from NFS, DB's, SMTP ,Windows, and finger services?  
 </td>
 </tr>
 
@@ -102,7 +103,7 @@ Incident response and analysis
 </td>
 
 <td>
-Dont let the title fool you, this is about reading logs, PCAPS and knowing how to use strings and hexdump. 
+Dont let the title fool you, this is about reading logs, PCAPS and knowing how to use strings and hexdump. Can you read the reports from Linux and Windows and can you understand what the reports are telling you?
 </td>
 </tr>
 
@@ -114,7 +115,7 @@ It can look a bit daunting if you don't recognise everything on there, but it do
 
 <h2 id="tips"> <a> Generic Exam Tips and Tricks  </a> </h2>
 <p>
-CPSA is a open book exam, don't be afraid to take in your condensed revision notes or a book or two. Although its open book time is very tight so you wont want to be having to look through pages and pages of notes and a few books so only take in things that you will need! Going into the exam make sure that your laptop is set up how you use it every day. The laptop gets wiped at the end of the exam (make sure you can take the drive out!) so it may be tempting to just stick something like Kali or the fedora security spin on there and be done with it, but keep in mind that this may not have all the tools on or set up and ready to use.</p>
+CPSA is a open book exam, don't be afraid to take in your condensed revision notes or a book or two. Although its open book time is very tight so you wont want to be having to look through pages and pages of notes and a few books so only take in things that you will need! Going into the exam make sure that your laptop is set up how you use it every day. The laptop gets wiped at the end of the exam (make sure you can take the drive out!) so it may be tempting to just stick something like Kali or the fedora security spin on there and be done with it, but keep in mind that this may not have all the tools on or set up and ready to use (why did they take finger and r login out by default!).</p>
 
 <p> The CPSA page suggests some of the books to read before the exam, and there is one on their list I like to keep around for quick reference and that is the Red Team Field Manual <a href="http://www.amazon.co.uk/Rtfm-Red-Team-Field-Manual/dp/1494295504">RTFM</a>), over time working as a tester you will probably write your own version of this anyway, but its a great starting point covering some common tools, networking, generic Windows / Linux "stuff", and a couple of common old CVE's that you may still see on engagements. </p>
 
@@ -128,8 +129,9 @@ And lastly Keep Calm don't panic, its easy really! And once you've finished star
 
 <h2 id="reading"> <a> Further Reading | Other Resources | Revision Notes  </a> </h2>
 <p>
-One of the ways I personally study for exams is I keep a note of headings of everything I need to know. This allows for quick reference in the exam (its open book after all) and an insight into what I need to know. I have attached my KeepNote notebook to this page in case anybody finds it useful. This is following the 1.0 syllabus ONLY, it has not been modified with anything taken from the exam paper itself. You will notice if you open it that it is not indexed, lots of spelling mistakes and most likely repeated content, its just how I keep my notes! These are coming soon tm after I get rid of the majority of spelling mistakes and any references to internal stuff.
+One of the ways I personally study for exams is I keep a note of headings of everything I need to know. This allows for quick reference in the exam (its open book after all) and an insight into what I need to know. I have attached my KeepNote notebook to this page in case anybody finds it useful. This is following the 1.0 syllabus ONLY, it has not been modified with anything taken from the exam paper itself. You will notice if you open it that it is not indexed, lots of spelling mistakes and most likely repeated content, its just how I keep my notes! These are currently <a href="https://necurity.co.uk/other/CSPA-2015-04-03.rar">Here </a> But notice theres loads missing and lots of spelling mistakes . . . deal with it ;) I will improve them later.
 </p>
+
 <p>
 There are also some other super useful resources I found to help my revising. I have linked to them below with a quick explanation of why I found it useful. 
 <table>
