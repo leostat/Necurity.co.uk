@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: Studying for and taking the CREST CPSA Exam
@@ -83,7 +82,7 @@ Unix Systems
 </td>
 
 <td>
-Although they usually number less in work environment you can do much much more with a Linux server. Being familiar with both RPM based and DEB based systems is a must. Again knowing how UID's and GID's are used, how file percussions work and are controlled ( do you know your chmod from chown). Knowing about NFS, X and GUID and SUID bits are, difference between SSH and Rlogin and Telnet, and all the problems among with all the problems with these services. If you have ever managed Linux servers you should be good to go with this section. 
+Although they usually number less in work environment you can do much much more with a Linux server. Being familiar with both RPM based and DEB based systems is a must. Again knowing how UID's and GID's are used, how file permissions work and are controlled (do you know your chmod from chown). Knowing about NFS, X and GUID and SUID bits are, difference between SSH and Rlogin and Telnet, and all the problems among with all the problems with these services. If you have ever managed Linux servers you should be good to go with this section. 
 </td>
 </tr>
 
@@ -93,7 +92,7 @@ Penetration testing
 </td>
 
 <td>
-The more fun topic for most people. This is at a basic level though and is more aimed at do you know the most common web-app problems, when you see id= what do you instantly think? Do you know the characters that commonly trigger XSS, Sql Injection and command injection?. Do you know how to sweep systesm with nmap, query information from database servers, brute force both http simple and http form authentication, brute SNMP and get information from it. How can you find content on web servers, and how do you get valid users from NFS, DB's, SMTP ,Windows, and finger services?  
+The more fun topic for most people. This is at a basic level though and is more aimed at do you know the most common web-app problems, when you see id= what do you instantly think? Do you know the characters that commonly trigger XSS, Sql Injection and command injection?. Do you know how to sweep systems with nmap or your vulnerability scanner of choice, query information from database servers, brute force both http simple and http form authentication, brute SNMP and get information from it. How can you find content on web servers, and how do you get valid users from NFS, DB's, SMTP ,Windows, and finger services?  
 </td>
 </tr>
 
@@ -129,7 +128,7 @@ And lastly Keep Calm don't panic, its easy really! And once you've finished star
 
 <h2 id="reading"> <a> Further Reading | Other Resources | Revision Notes  </a> </h2>
 <p>
-One of the ways I personally study for exams is I keep a note of headings of everything I need to know. This allows for quick reference in the exam (its open book after all) and an insight into what I need to know. I have attached my KeepNote notebook to this page in case anybody finds it useful. This is following the 1.0 syllabus ONLY, it has not been modified with anything taken from the exam paper itself. You will notice if you open it that it is not indexed, lots of spelling mistakes and most likely repeated content, its just how I keep my notes! These are currently <a href="https://necurity.co.uk/other/CSPA-2015-04-03.rar">Here </a> But notice theres loads missing and lots of spelling mistakes . . . deal with it ;) I will improve them later.
+One of the ways I personally study for exams is I keep a note of headings of everything I need to know. This allows for quick reference in the exam (its open book after all) and an insight into what I need to know. I have attached my KeepNote notebook to this page in case anybody finds it useful. This is following the 1.0 syllabus ONLY, it has not been modified with anything taken from the exam paper itself. You will notice if you open it that it is not indexed, lots of spelling mistakes (hey i even never bothered to fix the notebook title yet ;D ) and most likely repeated content, its just how I keep my notes! These are currently <a href="https://necurity.co.uk/other/CSPA.rar">Here </a> But again theres loads missing and lots of spelling mistakes . . . deal with it ;) I will improve them later :).
 </p>
 
 <p>
