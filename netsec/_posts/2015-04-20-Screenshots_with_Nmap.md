@@ -11,8 +11,8 @@ published: true
 <div id="pagemenu">
 <ol>
 <li><a href="#Summary">Summary</a></li>
-<li><a href="#Install"></a> Installing And using</li>
-<li><a href="#Bugs"></a> Bugs and Improvements</li>
+<li><a href="#Install">Installing And using</a></li>
+<li><a href="#Bugs">Bugs and Improvements</a></li>
 </ol>
 </div>
 
@@ -22,13 +22,13 @@ published: true
 {{page.summary}}
 </p>
 <p>
-There are a few tools that do this already such as Peeping Tom (Using Phantom JS). But me being me I wanted it to be included in the first nmap sweep of the range so i'm not having to run a second command (Yes im lazy, So?). This post / Script is based on <a href="https://www.trustwave.com/Resources/SpiderLabs-Blog/Using-Nmap-to-Screenshot-Web-Services/"> Spider Labs </a> nmap script that is available from <a href="https://github.com/SpiderLabs/Nmap-Tools"> GIT </a>. I liked the idea of this script but I had problems scanning HTTPS sites with it, websites that operated on non standard ports and also it fell over when faced with V-Hosts, Uh oh! Using there script as a base i have given it a bit of a make face lift to allow it to do these things, I need to open a Pull request for it after more testing!. Without further ado here is <a href="https://raw.githubusercontent.com/leostat/Necurity.co.uk/master/scripts/http-screenshot.nse"> Http Screenshot V2</a>.
+There are a few tools that do this already such as Peeping Tom (Using Phantom JS). But me being me I wanted it to be included in the first nmap sweep of the range so i'm not having to run a second command (Yes im lazy, So?). This post / Script is based on <a href="https://www.trustwave.com/Resources/SpiderLabs-Blog/Using-Nmap-to-Screenshot-Web-Services/"> Spider Labs</a> nmap script that is available from <a href="https://github.com/SpiderLabs/Nmap-Tools"> GIT</a>. I liked the idea of this script but I had problems scanning HTTPS sites with it, websites that operated on non standard ports and also it fell over when faced with V-Hosts, Uh oh! Using there script as a base i have given it a bit of a make face lift to allow it to do these things, I need to open a Pull request for it after more testing! Without further ado here is <a href="https://raw.githubusercontent.com/leostat/Necurity.co.uk/master/scripts/http-screenshot.nse"> Http Screenshot V2</a>.
 </p>
 </div>
 <div id="maincontent">
 <h2 id="Install"> <a> Installing and Using </a> </h2>
 <p>
-Installing Nmap Plugins is quite simple, Before you can use this scrip though there are some external dependencies that need to be installed, this is because I use wkhtml to image to do the screen shots.
+Installing Nmap Plugins is quite simple, Before you can use this script though there are some external dependencies that need to be installed, this is because I use wkhtml to image to do the screen shots.
 {% highlight bash %}
 #We need to grab the package
 # For Kali
