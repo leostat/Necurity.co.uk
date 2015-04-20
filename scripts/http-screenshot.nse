@@ -63,9 +63,8 @@ action = function(host, port)
 	local cmd = "wkhtmltoimage -n " .. prefix .. "://" .. scantarget .. ":" .. port.number .. " " .. filename .. " 2> /dev/null   >/dev/null"
 	
 	local ret = os.execute(cmd)
-	print(ret)
 	-- If the command was successful, print the saved message, otherwise print the fail message
-	local result = "Fail :( (Is wkhtmltoimage-i386 in path | Is the service not detecting SSL?) \n   * I tried do do this : "..cmd
+	local result = "Fail :( (Is wkhtmltoimage in path | Is the service not detecting SSL | Is it a bad return code?) \n   * I tried do do this : "..cmd
 
 	if ret then
 		result = "Saved to " .. filename
