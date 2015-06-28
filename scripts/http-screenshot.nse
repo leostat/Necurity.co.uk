@@ -60,7 +60,7 @@ action = function(host, port)
 	end
 
 	-- Execute the shell command wkhtmltoimage-i386 <url> <filename>
-	local cmd = "wkhtmltoimage -n " .. prefix .. "://" .. scantarget .. ":" .. port.number .. " " .. filename .. " 2> /dev/null   >/dev/null"
+	local cmd = "timeout -s9 10s wkhtmltoimage -n " .. prefix .. "://" .. scantarget .. ":" .. port.number .. " " .. filename .. " 2> /dev/null   >/dev/null"
 	
 	local ret = os.execute(cmd)
 	-- If the command was successful, print the saved message, otherwise print the fail message
