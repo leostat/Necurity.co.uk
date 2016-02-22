@@ -1,0 +1,69 @@
+==================================================================
+https://keybase.io/innes
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://necurity.co.uk
+  * I am innes (https://keybase.io/innes) on keybase.
+  * I have a public key with fingerprint 1309 666F AF17 F382 B2AC  2209 43FC 9A79 0D60 1B64
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "1309666faf17f382b2ac220943fc9a790d601b64",
+            "host": "keybase.io",
+            "key_id": "43fc9a790d601b64",
+            "kid": "0101c2380464cfc02d320456f6ee21de016a071def2fd9234d2347080679465367530a",
+            "uid": "7b61e20861d00658ab8e75f17abc8019",
+            "username": "innes"
+        },
+        "service": {
+            "hostname": "necurity.co.uk",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1433030976,
+    "expire_in": 157680000,
+    "prev": null,
+    "seqno": 1,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+owGbwMvMwMTo/GdWJW+CdArj6YPMSQyhWYGh1UpJ+SmVSlbVStmpYCotMy89taig
+KDOvRMlKydDYwNLMzCwtMc3QPM3YwijJKDHZyMjA0sQ4Ldky0dzSIMXMwDDJzERJ
+RykjvxikA2hMUmJxql5mPlAMyInPTAGKYlGfDZYwMDQwTDYytjAwMTNJTks2MEox
+NjIwMTVLM0tNNTJMSTUwNEs0MAcy0ozSUiyNjE1SgNjcwMLAzNzSxMzU2Mzc1Ngg
+EWhcKdg48yQzw1QjAwszwxQDAzNTi8Qki1RzU6DjE5OSLQwMLUEKi1OL8hJzU4Gq
+M/PyUouVanWUgEJlmcmpIP+DvAGVzktNLi3KLKnUS87XK80Gai0oyi/JT87PAcpl
+lJQUFFuB9JZUFoAUl6cmxUONiU/KzEsBBiNQR1lqUXFmfp6SlSFQZXJJJshcQxNj
+YwNguJqb6SilVhRkFqXGZ4JUmJqbWRgAAcie1DIlq7zSnByQ0wrz8oGyQIsS04H2
+FGem5yWWlBalKtVydTIuYGFgZGJgY2UCxSUDF6cALIa7dHjkHaaK/V4WtuDQxbUe
+Trt8VzycO/fLntnurus07JqalngUx36vaX/M1Bl4QP6J2xmRyv1e06J5/5nqMBzX
+15fcxFq4scY7cqn640yZxxf1qo7+2iYm+67r9ZISgyP7DiVEur6Kz9g3P+Ru3Xmj
+zzvnhW96vVPc1+buLTFnhrBN329Gses/l/nX1yiUcH/bheywdp5PC9+VGz2y2MC+
+967SZJvpMY6O+1rZp5/69mLF6zlnVpz48Pq6UObPWs+OJ5wLtSdWq9z7cvtD8UU/
+0YQEfpuWDd9V09/XO52aNu/Y5wMf9r/1f3cnZXL/zKtiMpnrrK1ner+O2fmo9vkL
+C55/7xyTpm/+cf4T/4Roo06ZR3umffaLFL6VUt67WmxtVq/F2RSzG8tOTbtp/VJn
+//vsqyqXWSedvc2z3EZtG3/OAqs+Jgb971nGzS2TWd5NErR9k25v1s53Q26evZtq
+e/CbiYnpDNaCtWJKdp8/fJhaOudoE2v3QTehwtyOT4r/+AvTbXcJv3HOr1zH8Le3
+YOMs8dA/3Z7bFdnyTNkA
+=/qpv
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/innes
+
+==================================================================
+
